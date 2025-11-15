@@ -1,0 +1,29 @@
+:root {
+  font-family: 'Segoe UI', 'PingFang SC', 'Helvetica Neue', sans-serif;
+  color: #0f172a;
+  background-color: #f8fafc;
+  line-height: 1.5;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eef2ff, #fdf2f8);
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+input, select, textarea {
+  border: none;
+  outline: none;
+  font: inherit;
+}
