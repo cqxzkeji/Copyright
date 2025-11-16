@@ -1,0 +1,21 @@
+:root {
+  color-scheme: light;
+  --bg-dark: #0f172a;
+  --panel: #1e293b;
+  --panel-light: #27364d;
+  --accent: #38bdf8;
+  --accent-strong: #0ea5e9;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg-dark);
+  color: var(--text);
+}
+
+button {
+  font-family: inherit;
+}
