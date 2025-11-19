@@ -1,0 +1,23 @@
+:root {
+  font-family: 'Segoe UI', 'PingFang SC', sans-serif;
+  color: #0f172a;
+  background-color: #f7f9fc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #f7f9fc;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
