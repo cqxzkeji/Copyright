@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+}
+
+input, select, textarea {
+  border-radius: 6px;
+  border: 1px solid #dcdfe6;
+  padding: 0.6rem;
+  font-size: 1rem;
+}
