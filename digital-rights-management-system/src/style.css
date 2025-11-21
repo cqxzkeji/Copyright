@@ -1,0 +1,78 @@
+:root {
+  font-family: 'Segoe UI', 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  color: #1f2933;
+  background-color: #f3f4f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body,
+html,
+#app {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  background: #2563eb;
+  color: #fff;
+  font-size: 0.95rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+}
+
+input,
+select,
+textarea {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  font-size: 0.95rem;
+}
+
+.modal-mask {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-window {
+  width: min(420px, 90%);
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 20px 55px rgba(15, 23, 42, 0.2);
+}
+
+.progress-track {
+  background-color: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  height: 10px;
+  margin-top: 0.5rem;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #34d399, #10b981);
+  height: 10px;
+  transition: width 0.4s ease;
+}
