@@ -4,6 +4,7 @@ import Main from '../views/Main.vue';
 import FiberModeling from '../views/FiberModeling.vue';
 import ParameterControl from '../views/ParameterControl.vue';
 import MaterialAnalysis from '../views/MaterialAnalysis.vue';
+import FilmEvaluation from '../views/FilmEvaluation.vue';
 import DataVisualization from '../views/DataVisualization.vue';
 
 const routes = [
@@ -18,6 +19,7 @@ const routes = [
       { path: 'modeling', name: 'modeling', component: FiberModeling },
       { path: 'control', name: 'control', component: ParameterControl },
       { path: 'analysis', name: 'analysis', component: MaterialAnalysis },
+      { path: 'evaluation', name: 'evaluation', component: FilmEvaluation },
       { path: 'visualization', name: 'visualization', component: DataVisualization }
     ]
   }

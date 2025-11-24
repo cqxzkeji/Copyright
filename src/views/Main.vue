@@ -15,6 +15,7 @@
         <router-link to="/main/modeling" class="nav" active-class="active">纤维素建模</router-link>
         <router-link to="/main/control" class="nav" active-class="active">参数调控</router-link>
         <router-link to="/main/analysis" class="nav" active-class="active">材料分析</router-link>
+        <router-link to="/main/evaluation" class="nav" active-class="active">成膜评估</router-link>
         <router-link to="/main/visualization" class="nav" active-class="active">数据可视化</router-link>
       </nav>
       <main class="content">
