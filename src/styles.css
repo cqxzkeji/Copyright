@@ -1,0 +1,142 @@
+:root {
+  --primary: #2d7bff;
+  --secondary: #4fe1b9;
+  --accent: #ffb347;
+  --surface: #f9fbff;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--surface);
+  color: var(--text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #e8f1ff 0%, #fdf5e6 100%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 20px 60px rgba(0, 80, 180, 0.12);
+  border: 1px solid rgba(45, 123, 255, 0.12);
+}
+
+.btn {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: linear-gradient(120deg, var(--primary), #5bb8ff);
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(45, 123, 255, 0.28);
+}
+
+.btn-outline {
+  background: #fff;
+  color: var(--text);
+  border: 1px solid rgba(45, 123, 255, 0.3);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.table th {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.table tr {
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(45, 123, 255, 0.08);
+}
+
+.table tr:last-child {
+  border-bottom: none;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(45, 123, 255, 0.1);
+  color: #0f4fee;
+}
+
+.progress {
+  width: 100%;
+  height: 10px;
+  background: rgba(45, 123, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(120deg, #2d7bff, #4fe1b9);
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: 700;
+  color: #2563eb;
+  text-transform: uppercase;
+}
+
+@media (min-width: 960px) {
+  .grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 959px) {
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+}
