@@ -102,6 +102,13 @@ const openPolicy = () => {
 
 const saveAll = () => {
   saved.value = true;
+  const now = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+  settings.push({
+    key: `log-${settings.length + 1}`,
+    name: '最近保存',
+    value: now,
+    desc: '记录最近一次保存时间'
+  });
 };
 </script>
 

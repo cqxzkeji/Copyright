@@ -154,7 +154,8 @@ const submitForm = () => {
     time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
     desc: form.desc || '无'
   };
-  hazards.push(newItem);
+  hazards.unshift(newItem);
+  Object.assign(form, { location: '', type: '', level: '中', desc: '' });
   showForm.value = false;
 };
 
@@ -165,6 +166,18 @@ const runScan = () => {
     scanProgress.value = Math.min(100, scanProgress.value + 15);
     if (scanProgress.value >= 100) {
       clearInterval(timer);
+      setTimeout(() => {
+        hazards.unshift({
+          id: hazards.length + 1,
+          location: '自动巡检区',
+          device: '巡检机器人',
+          type: '自检结果',
+          level: ['高', '中', '低'][Math.floor(Math.random() * 3)],
+          time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
+          desc: '巡检完成并生成记录'
+        });
+        scanning.value = false;
+      }, 400);
     }
   }, 350);
 };

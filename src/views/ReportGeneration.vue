@@ -131,6 +131,17 @@ const generateReport = () => {
     genProgress.value = Math.min(100, genProgress.value + 20);
     if (genProgress.value >= 100) {
       clearInterval(timer);
+      const time = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+      reports.unshift({
+        name: `${config.cycle}生成-${time}`,
+        cycle: config.cycle,
+        risk: (Math.random() * 0.5 + 0.3).toFixed(2),
+        time,
+        summary: `${config.format} 输出完成，内容：${config.scope || '标准模板'}`
+      });
+      setTimeout(() => {
+        generating.value = false;
+      }, 450);
     }
   }, 320);
 };

@@ -117,7 +117,15 @@ const showDispatchForm = () => {
 
 const confirmDispatch = () => {
   if (dispatch.id) {
-    current.value = { ...dispatch, status: '已派单', updated: '现在' };
+    alarms.unshift({
+      id: dispatch.id,
+      type: '手动派单',
+      status: '已派单',
+      owner: dispatch.owner || '待分配',
+      updated: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+    });
+    current.value = alarms[0];
+    Object.assign(dispatch, { id: '', owner: '', deadline: '' });
   }
   dispatchForm.value = false;
 };
@@ -129,6 +137,9 @@ const openNotify = () => {
     notifyProgress.value = Math.min(100, notifyProgress.value + 25);
     if (notifyProgress.value >= 100) {
       clearInterval(timer);
+      setTimeout(() => {
+        notify.value = false;
+      }, 400);
     }
   }, 280);
 };

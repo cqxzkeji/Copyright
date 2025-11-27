@@ -106,7 +106,8 @@ const openAdd = () => {
 };
 
 const saveDevice = () => {
-  devices.push({ ...form, status: '在线', lastCheck: '刚刚' });
+  devices.unshift({ ...form, status: '在线', lastCheck: '刚刚' });
+  Object.assign(form, { name: '', type: '烟感', location: '' });
   adding.value = false;
 };
 
@@ -117,12 +118,16 @@ const startMaintenance = () => {
     maintainProgress.value = Math.min(100, maintainProgress.value + 20);
     if (maintainProgress.value >= 100) {
       clearInterval(timer);
+      devices.forEach((d) => {
+        d.lastCheck = '刚刚';
+        d.status = '在线';
+      });
     }
   }, 300);
 };
 
 const ping = (device) => {
-  testTarget.value = device;
+  testTarget.value = { ...device, status: device.status === '离线' ? '已恢复' : '在线' };
 };
 </script>
 
