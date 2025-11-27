@@ -106,13 +106,26 @@ import {
   Tooltip,
   Legend,
   LineController,
+  PieController,
+  DoughnutController,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement
 } from 'chart.js';
 
-Chart.register(ArcElement, Tooltip, Legend, LineController, CategoryScale, LinearScale, PointElement, LineElement);
+Chart.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  LineController,
+  PieController,
+  DoughnutController,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement
+);
 
 const hazards = reactive([
   { id: 1, location: 'A1 楼梯间', device: '烟感#01', type: '烟雾超阈值', level: '高', time: '09:12', desc: '烟雾指数 0.82' },
