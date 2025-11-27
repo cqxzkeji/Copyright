@@ -99,7 +99,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, onUnmounted, reactive, ref } from 'vue';
 import { Chart, BarElement, CategoryScale, LinearScale, Tooltip, Legend, LineElement, PointElement } from 'chart.js';
 
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, LineElement, PointElement);
@@ -119,6 +119,15 @@ const previewing = ref(null);
 const config = reactive({ cycle: '周报', format: 'PDF', scope: '包含报警、巡检、设备状态' });
 const barRef = ref(null);
 const trendRef = ref(null);
+let barChart = null;
+let trendChart = null;
+
+const destroyCharts = () => {
+  barChart?.destroy();
+  trendChart?.destroy();
+  barChart = null;
+  trendChart = null;
+};
 
 const openConfig = () => {
   configOpen.value = true;
@@ -151,8 +160,9 @@ const preview = (row) => {
 };
 
 const initCharts = () => {
+  destroyCharts();
   if (barRef.value) {
-    new Chart(barRef.value, {
+    barChart = new Chart(barRef.value, {
       type: 'bar',
       data: {
         labels: ['烟雾', '温度', '电气', '视频', '巡检'],
@@ -171,7 +181,7 @@ const initCharts = () => {
     });
   }
   if (trendRef.value) {
-    new Chart(trendRef.value, {
+    trendChart = new Chart(trendRef.value, {
       type: 'line',
       data: {
         labels: ['Q1', 'Q2', 'Q3', 'Q4'],
@@ -195,6 +205,10 @@ const initCharts = () => {
 
 onMounted(() => {
   initCharts();
+});
+
+onUnmounted(() => {
+  destroyCharts();
 });
 </script>
 

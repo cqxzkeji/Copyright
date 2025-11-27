@@ -99,7 +99,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, onUnmounted, reactive, ref } from 'vue';
 import {
   Chart,
   ArcElement,
@@ -195,9 +195,20 @@ const runScan = () => {
   }, 350);
 };
 
+let pieChart = null;
+let lineChart = null;
+
+const destroyCharts = () => {
+  pieChart?.destroy();
+  lineChart?.destroy();
+  pieChart = null;
+  lineChart = null;
+};
+
 const initCharts = () => {
+  destroyCharts();
   if (pieRef.value) {
-    new Chart(pieRef.value, {
+    pieChart = new Chart(pieRef.value, {
       type: 'pie',
       data: {
         labels: ['高', '中', '低'],
@@ -215,7 +226,7 @@ const initCharts = () => {
     });
   }
   if (lineRef.value) {
-    new Chart(lineRef.value, {
+    lineChart = new Chart(lineRef.value, {
       type: 'line',
       data: {
         labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
@@ -239,6 +250,10 @@ const initCharts = () => {
 
 onMounted(() => {
   initCharts();
+});
+
+onUnmounted(() => {
+  destroyCharts();
 });
 </script>
 
