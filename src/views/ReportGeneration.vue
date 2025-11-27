@@ -100,9 +100,30 @@
 
 <script setup>
 import { onMounted, onUnmounted, reactive, ref } from 'vue';
-import { Chart, BarElement, CategoryScale, LinearScale, Tooltip, Legend, LineElement, PointElement } from 'chart.js';
+import {
+  Chart,
+  BarController,
+  LineController,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  LineElement,
+  PointElement
+} from 'chart.js';
 
-Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, LineElement, PointElement);
+Chart.register(
+  BarController,
+  LineController,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  LineElement,
+  PointElement
+);
 
 const reports = reactive([
   { name: '隐患日报-07', cycle: '日报', risk: '0.32', time: '09:00', summary: '今日发现 6 处隐患，已处理 4 处' },
