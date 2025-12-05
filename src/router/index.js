@@ -11,26 +11,29 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/login', name: 'Login', component: Login, meta: { public: true } },
-    {
-      path: '/',
-      component: Dashboard,
-      name: 'Dashboard'
-    },
-    { path: '/training', name: 'ModelTraining', component: ModelTraining },
-    { path: '/evaluation', name: 'ModelEvaluation', component: ModelEvaluation },
-    { path: '/tuning', name: 'HyperparameterTuning', component: HyperparameterTuning },
-    { path: '/optimization', name: 'ModelOptimization', component: ModelOptimization },
-    { path: '/preprocessing', name: 'DataPreprocessing', component: DataPreprocessing }
+    { path: '/', name: 'Dashboard', component: Dashboard, meta: { requiresAuth: true } },
+    { path: '/training', name: 'ModelTraining', component: ModelTraining, meta: { requiresAuth: true } },
+    { path: '/evaluation', name: 'ModelEvaluation', component: ModelEvaluation, meta: { requiresAuth: true } },
+    { path: '/tuning', name: 'HyperparameterTuning', component: HyperparameterTuning, meta: { requiresAuth: true } },
+    { path: '/optimization', name: 'ModelOptimization', component: ModelOptimization, meta: { requiresAuth: true } },
+    { path: '/preprocessing', name: 'DataPreprocessing', component: DataPreprocessing, meta: { requiresAuth: true } },
+    { path: '/:pathMatch(.*)*', redirect: '/' }
   ]
 });
 
 router.beforeEach((to, from, next) => {
   const authed = Boolean(sessionStorage.getItem('ml-auth'));
-  if (to.meta.public || authed) {
+  if (to.meta.public) {
     next();
     return;
   }
-  next('/login');
+
+  if (to.meta.requiresAuth && !authed) {
+    next({ name: 'Login', query: { redirect: to.fullPath } });
+    return;
+  }
+
+  next();
 });
 
 export default router;

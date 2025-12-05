@@ -34,16 +34,18 @@
 
 <script setup>
 import { reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import BaseModal from '../components/BaseModal.vue';
 
 const router = useRouter();
+const route = useRoute();
 const form = reactive({ username: '', password: '', workspace: '默认工作区' });
 const showHint = ref(false);
 
 const handleLogin = () => {
   sessionStorage.setItem('ml-auth', `${form.username}-${Date.now()}`);
-  router.push('/');
+  const target = route.query.redirect || '/';
+  router.replace(String(target));
 };
 </script>
 
