@@ -89,7 +89,7 @@ const compare = [
   { label: '回放B', value: 100, score: 'AUC 0.90' }
 ];
 
-const results = [
+const results = ref([
   { name: 'v1.3', auc: 0.94, f1: 0.91, recall: 0.89, precision: 0.92, note: '基线' },
   { name: 'v1.4', auc: 0.96, f1: 0.93, recall: 0.9, precision: 0.95, note: '提升召回' },
   { name: 'v1.5', auc: 0.97, f1: 0.94, recall: 0.91, precision: 0.95, note: '最佳' },
@@ -100,22 +100,49 @@ const results = [
   { name: 'ab-test-B', auc: 0.93, f1: 0.91, recall: 0.88, precision: 0.94, note: '实验B' },
   { name: '线上shadow', auc: 0.91, f1: 0.89, recall: 0.86, precision: 0.91, note: 'shadow' },
   { name: '夜间批次', auc: 0.92, f1: 0.9, recall: 0.87, precision: 0.92, note: '离线' }
-];
+]);
 
 const modal = reactive({ type: '' });
 const progress = ref(0);
 const progressTitle = ref('任务');
+const activeTask = ref('');
 let timer;
 
 const startProgress = (title) => {
+  activeTask.value = title;
   progressTitle.value = title;
   modal.type = 'progress';
   progress.value = 0;
   clearInterval(timer);
   timer = setInterval(() => {
     progress.value = Math.min(100, progress.value + 18);
-    if (progress.value === 100) clearInterval(timer);
+    if (progress.value === 100) {
+      clearInterval(timer);
+      setTimeout(() => finalizeTask(title), 320);
+    }
   }, 320);
+};
+
+const finalizeTask = (title) => {
+  if (title === '批量评估') {
+    const id = `batch-${results.value.length + 1}`;
+    results.value.unshift({
+      name: id,
+      auc: 0.9 + Math.random() * 0.07,
+      f1: 0.88 + Math.random() * 0.05,
+      recall: 0.85 + Math.random() * 0.06,
+      precision: 0.9 + Math.random() * 0.05,
+      note: '新批次'
+    });
+  }
+  if (title === '导入标签') {
+    results.value[0].note = '标签已更新';
+  }
+  if (title === '生成报告') {
+    results.value[0].note = '报告生成完成';
+  }
+  modal.type = 'report';
+  activeTask.value = '';
 };
 
 const openBatch = () => (modal.type = 'batch');

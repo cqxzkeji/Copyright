@@ -10,6 +10,7 @@
         <button class="btn secondary" @click="openSpace">导入搜索空间</button>
         <button class="btn secondary" @click="openExport">保存最佳参数</button>
       </div>
+      <p class="muted" style="margin-top: 4px">最后导出：{{ lastExport || '尚未生成' }}</p>
     </div>
 
     <div class="section-grid">
@@ -89,7 +90,7 @@ const bestMetrics = [
   { label: 'Latency', value: 90, score: '19ms' }
 ];
 
-const trials = [
+const trials = ref([
   { name: 'trial-101', lr: '2e-4', dropout: 0.1, batch: 128, score: 0.964, note: '最佳' },
   { name: 'trial-102', lr: '3e-4', dropout: 0.15, batch: 96, score: 0.957, note: '次优' },
   { name: 'trial-103', lr: '1e-4', dropout: 0.2, batch: 64, score: 0.949, note: '提升召回' },
@@ -100,23 +101,51 @@ const trials = [
   { name: 'trial-108', lr: '2.1e-4', dropout: 0.17, batch: 256, score: 0.945, note: 'batch大' },
   { name: 'trial-109', lr: '2.3e-4', dropout: 0.1, batch: 128, score: 0.955, note: '稳健' },
   { name: 'trial-110', lr: '2.0e-4', dropout: 0.13, batch: 144, score: 0.952, note: '耗时低' }
-];
+]);
 
 const modal = reactive({ type: '' });
 const progress = ref(0);
 const progressTitle = ref('任务');
 const searchForm = reactive({ strategy: '贝叶斯优化', trials: 50, parallel: 4 });
+const lastExport = ref('');
+const activeTask = ref('');
 let timer;
 
 const startProgress = (title) => {
+  activeTask.value = title;
   progressTitle.value = title;
   modal.type = 'progress';
   progress.value = 0;
   clearInterval(timer);
   timer = setInterval(() => {
     progress.value = Math.min(100, progress.value + 14);
-    if (progress.value === 100) clearInterval(timer);
+    if (progress.value === 100) {
+      clearInterval(timer);
+      setTimeout(() => finalizeTask(title), 320);
+    }
   }, 300);
+};
+
+const finalizeTask = (title) => {
+  if (title === '超参搜索') {
+    const id = `trial-${trials.value.length + 101}`;
+    trials.value.unshift({
+      name: id,
+      lr: `${(Math.random() * 3 + 1).toFixed(1)}e-4`,
+      dropout: Number((Math.random() * 0.2).toFixed(2)),
+      batch: [64, 96, 128, 160, 192, 256][Math.floor(Math.random() * 6)],
+      score: Number((0.93 + Math.random() * 0.04).toFixed(3)),
+      note: `${searchForm.strategy} 完成`
+    });
+  }
+  if (title === '导入搜索空间') {
+    searchForm.strategy = '自定义空间';
+  }
+  if (title === '保存最佳参数') {
+    lastExport.value = `best-${Date.now()}`;
+  }
+  modal.type = 'export';
+  activeTask.value = '';
 };
 
 const openSearch = () => (modal.type = 'search');

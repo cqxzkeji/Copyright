@@ -10,6 +10,7 @@
         <button class="btn secondary" @click="openPrune">结构剪枝</button>
         <button class="btn secondary" @click="openExport">导出推理包</button>
       </div>
+      <p class="muted" style="margin-top: 4px">最近导出：{{ lastExport || '未导出' }}</p>
     </div>
 
     <div class="section-grid">
@@ -92,7 +93,7 @@ const latency = [
   { label: '融合', value: 88, ms: '18ms' }
 ];
 
-const optimizations = [
+const optimizations = ref([
   { name: 'opt-071', type: '量化', ratio: '38%', latency: '-12ms', size: '210MB', note: 'INT8 PTQ' },
   { name: 'opt-072', type: '蒸馏', ratio: '28%', latency: '-9ms', size: '280MB', note: '教师v1' },
   { name: 'opt-073', type: '剪枝', ratio: '32%', latency: '-10ms', size: '240MB', note: '全局稀疏' },
@@ -103,22 +104,47 @@ const optimizations = [
   { name: 'opt-078', type: '量化', ratio: '36%', latency: '-12ms', size: '215MB', note: '混合精度' },
   { name: 'opt-079', type: '剪枝', ratio: '29%', latency: '-9ms', size: '245MB', note: '结构剪枝' },
   { name: 'opt-080', type: '蒸馏', ratio: '24%', latency: '-8ms', size: '290MB', note: '序列蒸馏' }
-];
+]);
 
 const modal = reactive({ type: '' });
 const progress = ref(0);
 const progressTitle = ref('任务');
+const activeTask = ref('');
+const lastExport = ref('');
 let timer;
 
 const startProgress = (title) => {
+  activeTask.value = title;
   progressTitle.value = title;
   modal.type = 'progress';
   progress.value = 0;
   clearInterval(timer);
   timer = setInterval(() => {
     progress.value = Math.min(100, progress.value + 16);
-    if (progress.value === 100) clearInterval(timer);
+    if (progress.value === 100) {
+      clearInterval(timer);
+      setTimeout(() => finalizeTask(title), 320);
+    }
   }, 300);
+};
+
+const finalizeTask = (title) => {
+  if (['量化压缩', '结构剪枝'].includes(title)) {
+    const id = `opt-${optimizations.value.length + 71}`;
+    optimizations.value.unshift({
+      name: id,
+      type: title.includes('量化') ? '量化' : '剪枝',
+      ratio: `${Math.round(Math.random() * 20 + 20)}%`,
+      latency: `-${Math.round(Math.random() * 8 + 6)}ms`,
+      size: `${Math.round(Math.random() * 60 + 200)}MB`,
+      note: `${title} 完成`
+    });
+  }
+  if (title === '导出推理包') {
+    lastExport.value = `export-${Date.now()}`;
+  }
+  modal.type = 'export';
+  activeTask.value = '';
 };
 
 const openQuant = () => (modal.type = 'quant');

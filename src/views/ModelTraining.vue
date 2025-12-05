@@ -89,7 +89,7 @@ const lossTrend = [
   { label: 'Step 6', value: 55, loss: '0.30' }
 ];
 
-const trainings = [
+const trainings = ref([
   { name: 'Run-040', lr: '3e-4', batch: 128, epoch: 10, metric: 'AUC 0.94' },
   { name: 'Run-041', lr: '2e-4', batch: 256, epoch: 12, metric: 'AUC 0.95' },
   { name: 'Run-042', lr: '1e-4', batch: 128, epoch: 15, metric: 'F1 0.92' },
@@ -100,13 +100,14 @@ const trainings = [
   { name: 'Run-047', lr: '1.8e-4', batch: 160, epoch: 18, metric: 'F1 0.93' },
   { name: 'Run-048', lr: '2.2e-4', batch: 224, epoch: 12, metric: 'AUC 0.95' },
   { name: 'Run-049', lr: '2.0e-4', batch: 256, epoch: 10, metric: 'Acc 0.92' }
-];
+]);
 
-const recentLogs = Array.from({ length: 10 }, (_, i) => `训练日志片段 ${i + 1}`);
+const recentLogs = ref(Array.from({ length: 10 }, (_, i) => `训练日志片段 ${i + 1}`));
 
 const modal = reactive({ type: '' });
 const progress = ref(0);
 const progressTitle = ref('任务进行中');
+const activeTask = ref('');
 const form = reactive({ model: '', lr: '0.0003', batch: '128', epoch: '12' });
 let timer;
 
@@ -122,8 +123,29 @@ const openLog = () => {
   modal.type = 'log';
 };
 
-const startProgress = (title) => {
-  progressTitle.value = title === 'uploading' ? '上传数据' : '训练任务';
+const finishTask = () => {
+  if (activeTask.value === 'training') {
+    const runId = `Run-${Math.floor(40 + trainings.value.length + 1)}`;
+    trainings.value.unshift({
+      name: runId,
+      lr: form.lr,
+      batch: Number(form.batch),
+      epoch: Number(form.epoch),
+      metric: '等待评估'
+    });
+    recentLogs.value.unshift(`${runId} 已提交，等待资源调度。`);
+    modal.type = 'log';
+  }
+  if (activeTask.value === 'uploading') {
+    recentLogs.value.unshift('数据上传完成，已触发预处理。');
+    modal.type = 'log';
+  }
+  activeTask.value = '';
+};
+
+const startProgress = (task) => {
+  activeTask.value = task;
+  progressTitle.value = task === 'uploading' ? '上传数据' : '训练任务';
   modal.type = 'progress';
   progress.value = 0;
   clearInterval(timer);
@@ -131,6 +153,7 @@ const startProgress = (title) => {
     progress.value = Math.min(100, progress.value + 15);
     if (progress.value === 100) {
       clearInterval(timer);
+      setTimeout(finishTask, 350);
     }
   }, 300);
 };

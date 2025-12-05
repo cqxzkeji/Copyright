@@ -96,7 +96,7 @@ const missing = [
   { label: 'language', value: 60, rate: '0.8%' }
 ];
 
-const records = [
+const records = ref([
   { batch: 'batch-201', size: '120k', missing: '0.8%', outlier: '0.3%', features: 320, owner: 'Lynn' },
   { batch: 'batch-202', size: '130k', missing: '0.9%', outlier: '0.2%', features: 330, owner: 'Zhang' },
   { batch: 'batch-203', size: '140k', missing: '0.7%', outlier: '0.25%', features: 335, owner: 'Li' },
@@ -107,22 +107,42 @@ const records = [
   { batch: 'batch-208', size: '190k', missing: '0.55%', outlier: '0.35%', features: 355, owner: 'An' },
   { batch: 'batch-209', size: '200k', missing: '0.52%', outlier: '0.27%', features: 360, owner: 'Dai' },
   { batch: 'batch-210', size: '210k', missing: '0.48%', outlier: '0.3%', features: 365, owner: 'Xu' }
-];
+]);
 
 const modal = reactive({ type: '' });
 const progress = ref(0);
 const progressTitle = ref('任务');
+const activeTask = ref('');
 let timer;
 
 const startProgress = (title) => {
+  activeTask.value = title;
   progressTitle.value = title;
   modal.type = 'progress';
   progress.value = 0;
   clearInterval(timer);
   timer = setInterval(() => {
     progress.value = Math.min(100, progress.value + 17);
-    if (progress.value === 100) clearInterval(timer);
+    if (progress.value === 100) {
+      clearInterval(timer);
+      setTimeout(() => finalizeTask(title), 320);
+    }
   }, 320);
+};
+
+const finalizeTask = (title) => {
+  const id = records.value.length + 201;
+  const entry = {
+    batch: `batch-${id}`,
+    size: `${120 + (records.value.length + 1) * 10}k`,
+    missing: `${(Math.random() * 0.6 + 0.2).toFixed(2)}%`,
+    outlier: `${(Math.random() * 0.2 + 0.1).toFixed(2)}%`,
+    features: 320 + records.value.length * 5,
+    owner: title
+  };
+  records.value.unshift(entry);
+  modal.type = 'progress';
+  activeTask.value = '';
 };
 
 const openClean = () => (modal.type = 'clean');
