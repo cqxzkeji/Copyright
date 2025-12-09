@@ -1,7 +1,7 @@
 <template>
   <router-view v-slot="{ Component, route }">
     <div v-if="route.name === 'Login'">
-      <Component />
+      <component :is="Component" />
     </div>
     <div v-else class="app-shell">
       <aside class="sidebar">
@@ -28,7 +28,7 @@
             <button class="btn secondary" @click="logout">退出登录</button>
           </div>
         </header>
-        <Component />
+        <component :is="Component" />
       </main>
     </div>
   </router-view>
