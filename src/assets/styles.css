@@ -1,0 +1,100 @@
+:root {
+  --primary: #3c7be6;
+  --secondary: #6ec1e4;
+  --accent: #f5a524;
+  --bg: #f7f9fc;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(60, 123, 230, 0.2);
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(60, 123, 230, 0.25);
+}
+
+.container {
+  padding: 16px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  border: 1px solid var(--border);
+  padding: 10px;
+  text-align: left;
+}
+
+table th {
+  background: #eef4ff;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.status-positive {
+  background: #ecfdf3;
+  color: #166534;
+}
+
+.status-warning {
+  background: #fff4e6;
+  color: #92400e;
+}
+
+.status-negative {
+  background: #fef2f2;
+  color: #b91c1c;
+}
