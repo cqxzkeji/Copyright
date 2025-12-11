@@ -5,6 +5,7 @@
         <div>
           <h2>精选短视频</h2>
           <p class="muted">浏览频道流视频，支持批量调度与预览</p>
+          <p v-if="actionMessage" class="status">{{ actionMessage }}</p>
         </div>
         <div class="actions">
           <button class="btn" @click="showUpload = true">上传视频</button>
@@ -56,7 +57,10 @@
             <td>{{ item.channel }}</td>
             <td>{{ item.time }}</td>
             <td>{{ item.budget }}</td>
-            <td><span class="badge">{{ item.status }}</span></td>
+            <td>
+              <span class="badge">{{ item.status }}</span>
+              <span v-if="item.note" class="muted" style="display:block;">{{ item.note }}</span>
+            </td>
             <td>
               <button class="btn secondary" @click="openEdit(item)">编辑</button>
             </td>
@@ -106,11 +110,11 @@
       <button class="btn" @click="activePreview = null">关闭</button>
     </Modal>
 
-    <Modal v-if="activeSchedule" title="加入排期" @close="activeSchedule = null">
-      <form class="form-grid" @submit.prevent="activeSchedule = null">
+    <Modal v-if="activeSchedule" title="加入排期" @close="closeSchedule">
+      <form class="form-grid" @submit.prevent="submitSchedule">
         <div>
           <label>渠道</label>
-          <select>
+          <select v-model="scheduleForm.channel">
             <option>快搜</option>
             <option>视频号</option>
             <option>首页推荐</option>
@@ -118,18 +122,18 @@
         </div>
         <div>
           <label>发布时间</label>
-          <input type="datetime-local" />
+          <input v-model="scheduleForm.time" type="datetime-local" />
         </div>
         <button class="btn" type="submit">保存排期</button>
       </form>
     </Modal>
 
     <Modal v-if="activeEdit" title="编辑发布" @close="activeEdit = null">
-      <form class="form-grid" @submit.prevent="activeEdit = null">
+      <form class="form-grid" @submit.prevent="submitEdit">
         <label>预算 (元)</label>
-        <input type="number" min="0" step="100" />
+        <input v-model.number="editForm.budget" type="number" min="0" step="100" />
         <label>备注</label>
-        <textarea rows="3"></textarea>
+        <textarea v-model="editForm.note" rows="3"></textarea>
         <button class="btn" type="submit">保存修改</button>
       </form>
     </Modal>
@@ -137,7 +141,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, onUnmounted } from 'vue';
+import { reactive, ref, onMounted, onUnmounted, watch } from 'vue';
 
 const showUpload = ref(false);
 const showBatch = ref(false);
@@ -146,7 +150,11 @@ const batchProgress = ref(36);
 const activePreview = ref(null);
 const activeSchedule = ref(null);
 const activeEdit = ref(null);
+const actionMessage = ref('');
 const form = reactive({ title: '', channel: '热点', cover: '' });
+const scheduleForm = reactive({ channel: '快搜', time: '', title: '' });
+const editForm = reactive({ budget: 0, note: '' });
+let batchTimer;
 
 const videos = reactive([
   {
@@ -260,23 +268,35 @@ const videos = reactive([
 ]);
 
 const schedule = reactive([
-  { id: 1, title: '夜市烟火气记录', channel: '首页推荐', time: '18:00', budget: '¥5000', status: '审核中' },
-  { id: 2, title: '滑板少年的一天', channel: '同城', time: '19:00', budget: '¥4200', status: '排期' },
-  { id: 3, title: '咖啡拉花大师', channel: '兴趣流', time: '20:00', budget: '¥6200', status: '投放中' },
-  { id: 4, title: '森林露营 24 小时', channel: '户外', time: '10:30', budget: '¥3200', status: '排期' },
-  { id: 5, title: '科技新品 30s 速览', channel: '数码', time: '12:00', budget: '¥7200', status: '审核中' },
-  { id: 6, title: '街头音乐合集', channel: '音乐', time: '14:00', budget: '¥2800', status: '投放中' },
-  { id: 7, title: '30 秒职场表达技巧', channel: '职场', time: '09:00', budget: '¥2400', status: '排期' },
-  { id: 8, title: '萌宠日常混剪', channel: '萌宠', time: '17:00', budget: '¥8100', status: '投放中' },
-  { id: 9, title: '手绘插画过程', channel: '艺术', time: '21:00', budget: '¥2600', status: '审核中' },
-  { id: 10, title: '健身 3 招燃脂', channel: '健康', time: '07:30', budget: '¥5300', status: '排期' },
-  { id: 11, title: '夜景延时摄影', channel: '摄影', time: '23:00', budget: '¥3000', status: '备份' },
-  { id: 12, title: '高铁疾驰窗景', channel: '旅拍', time: '16:00', budget: '¥3500', status: '投放中' }
+  { id: 1, title: '夜市烟火气记录', channel: '首页推荐', time: '18:00', budget: '¥5000', status: '审核中', note: '' },
+  { id: 2, title: '滑板少年的一天', channel: '同城', time: '19:00', budget: '¥4200', status: '排期', note: '' },
+  { id: 3, title: '咖啡拉花大师', channel: '兴趣流', time: '20:00', budget: '¥6200', status: '投放中', note: '' },
+  { id: 4, title: '森林露营 24 小时', channel: '户外', time: '10:30', budget: '¥3200', status: '排期', note: '' },
+  { id: 5, title: '科技新品 30s 速览', channel: '数码', time: '12:00', budget: '¥7200', status: '审核中', note: '' },
+  { id: 6, title: '街头音乐合集', channel: '音乐', time: '14:00', budget: '¥2800', status: '投放中', note: '' },
+  { id: 7, title: '30 秒职场表达技巧', channel: '职场', time: '09:00', budget: '¥2400', status: '排期', note: '' },
+  { id: 8, title: '萌宠日常混剪', channel: '萌宠', time: '17:00', budget: '¥8100', status: '投放中', note: '' },
+  { id: 9, title: '手绘插画过程', channel: '艺术', time: '21:00', budget: '¥2600', status: '审核中', note: '' },
+  { id: 10, title: '健身 3 招燃脂', channel: '健康', time: '07:30', budget: '¥5300', status: '排期', note: '' },
+  { id: 11, title: '夜景延时摄影', channel: '摄影', time: '23:00', budget: '¥3000', status: '备份', note: '' },
+  { id: 12, title: '高铁疾驰窗景', channel: '旅拍', time: '16:00', budget: '¥3500', status: '投放中', note: '' }
 ]);
 
 const submitUpload = () => {
   videos.unshift({ ...form, id: Date.now(), views: '0', duration: '待定', exposure: 0 });
+  schedule.unshift({
+    id: Date.now(),
+    title: form.title || '新上传视频',
+    channel: form.channel,
+    time: '待排期',
+    budget: '¥0',
+    status: '待排期',
+    note: '上传成功，等待排期'
+  });
   showUpload.value = false;
+  actionMessage.value = `${form.title || '新视频'} 已上传并加入待排期`;
+  form.title = '';
+  form.cover = '';
 };
 
 const openPreview = (video) => {
@@ -285,21 +305,65 @@ const openPreview = (video) => {
 
 const openSchedule = (video) => {
   activeSchedule.value = video;
+  scheduleForm.title = video.title;
+  scheduleForm.channel = '快搜';
+  scheduleForm.time = new Date().toISOString().slice(0, 16);
 };
 
 const openEdit = (item) => {
   activeEdit.value = item;
+  editForm.budget = Number(item.budget.replace(/[^0-9]/g, '')) || 0;
+  editForm.note = item.note || '';
+};
+
+const submitSchedule = () => {
+  if (!scheduleForm.title) return;
+  schedule.unshift({
+    id: Date.now(),
+    title: scheduleForm.title,
+    channel: scheduleForm.channel,
+    time: scheduleForm.time || '待定',
+    budget: '¥0',
+    status: '排期',
+    note: '新增排期'
+  });
+  actionMessage.value = `${scheduleForm.title} 已加入 ${scheduleForm.channel} 排期`;
+  closeSchedule();
+};
+
+const submitEdit = () => {
+  if (!activeEdit.value) return;
+  activeEdit.value.budget = `¥${editForm.budget.toLocaleString()}`;
+  activeEdit.value.note = editForm.note || '预算已更新';
+  activeEdit.value.status = '修改待审核';
+  actionMessage.value = `${activeEdit.value.title} 预算调整为 ${activeEdit.value.budget}`;
+  activeEdit.value = null;
+};
+
+const closeSchedule = () => {
+  activeSchedule.value = null;
 };
 
 onMounted(() => {
-  const timer = setInterval(() => {
-    batchProgress.value = Math.min(100, batchProgress.value + 8);
-    if (batchProgress.value >= 100) {
-      batchProgress.value = 16;
+  watch(
+    () => showBatch.value,
+    (isOpen) => {
+      clearInterval(batchTimer);
+      if (isOpen) {
+        batchProgress.value = 18;
+        batchTimer = setInterval(() => {
+          batchProgress.value = Math.min(100, batchProgress.value + 12);
+          if (batchProgress.value >= 100) {
+            actionMessage.value = '批量发布完成，已进入审核队列';
+            clearInterval(batchTimer);
+          }
+        }, 600);
+      }
     }
-  }, 800);
-  onUnmounted(() => clearInterval(timer));
+  );
 });
+
+onUnmounted(() => clearInterval(batchTimer));
 </script>
 
 <script>
@@ -374,5 +438,11 @@ export default {
 .row.small {
   color: #6b7280;
   font-size: 13px;
+}
+
+.status {
+  margin: 6px 0 0;
+  color: #111827;
+  font-weight: 600;
 }
 </style>

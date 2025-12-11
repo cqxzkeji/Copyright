@@ -9,6 +9,7 @@
           <button class="btn" @click="showSetting = true">配置</button>
         </div>
       </div>
+      <p v-if="statusMessage" class="status">{{ statusMessage }}</p>
       <table class="table">
         <thead>
           <tr>
@@ -47,18 +48,24 @@
       <ul class="chips">
         <li v-for="item in tags" :key="item" class="chip">{{ item }}</li>
       </ul>
+      <div v-if="reports.length" class="reports">
+        <h4>最近报表</h4>
+        <ul>
+          <li v-for="report in reports" :key="report.time">{{ report.title }} · {{ report.format }}</li>
+        </ul>
+      </div>
     </section>
   </div>
 
   <Modal v-if="showReport" title="生成报表" @close="showReport = false">
-    <form class="form-grid" @submit.prevent="showReport = false">
+    <form class="form-grid" @submit.prevent="generateReport">
       <label>选择周期</label>
-      <select>
+      <select v-model="reportRange">
         <option>最近 7 天</option>
         <option>最近 30 天</option>
       </select>
       <label>输出格式</label>
-      <select>
+      <select v-model="reportFormat">
         <option>PDF</option>
         <option>XLSX</option>
       </select>
@@ -72,14 +79,14 @@
   </Modal>
 
   <Modal v-if="showSetting" title="配置开关" @close="showSetting = false">
-    <form class="form-grid" @submit.prevent="showSetting = false">
+    <form class="form-grid" @submit.prevent="saveSetting">
       <label>流量保护</label>
-      <select>
+      <select v-model="settingForm.protect">
         <option>自动</option>
         <option>手动</option>
       </select>
       <label>发布审批</label>
-      <select>
+      <select v-model="settingForm.review">
         <option>需要</option>
         <option>跳过</option>
       </select>
@@ -88,17 +95,17 @@
   </Modal>
 
   <Modal v-if="activeBudget" :title="`调整 ${activeBudget.name} 预算`" @close="activeBudget = null">
-    <form class="form-grid" @submit.prevent="activeBudget = null">
+    <form class="form-grid" @submit.prevent="submitBudget">
       <label>日预算</label>
-      <input type="number" min="0" step="500" />
+      <input v-model.number="budgetForm.daily" type="number" min="0" step="500" />
       <label>投放上限</label>
-      <input type="number" min="0" step="1000" />
+      <input v-model.number="budgetForm.cap" type="number" min="0" step="1000" />
       <button class="btn" type="submit">保存</button>
     </form>
   </Modal>
 
   <Modal v-if="activeInsight" :title="`${activeInsight.name} 洞察`" @close="activeInsight = null">
-    <p>正在生成频道曝光曲线...</p>
+    <p>正在生成频道曝光曲线... {{ insightProgress }}%</p>
     <div class="progress">
       <div class="progress-bar" :style="{ width: insightProgress + '%' }"></div>
     </div>
@@ -106,12 +113,12 @@
 
   <Modal v-if="showMonitor" title="刷新监控" @close="showMonitor = false">
     <p>刷新会重新计算质量分，预计耗时 30 秒。</p>
-    <button class="btn" @click="showMonitor = false">开始刷新</button>
+    <button class="btn" @click="refreshMonitors">开始刷新</button>
   </Modal>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, onUnmounted } from 'vue';
+import { reactive, ref, onUnmounted, watch } from 'vue';
 
 const showReport = ref(false);
 const showAlert = ref(false);
@@ -120,6 +127,13 @@ const showMonitor = ref(false);
 const insightProgress = ref(30);
 const activeBudget = ref(null);
 const activeInsight = ref(null);
+const statusMessage = ref('');
+const reportRange = ref('最近 7 天');
+const reportFormat = ref('PDF');
+const settingForm = reactive({ protect: '自动', review: '需要' });
+const budgetForm = reactive({ daily: 0, cap: 0 });
+const reports = reactive([]);
+let insightTimer;
 
 const projects = reactive([
   { name: '城市夜景池', type: '推荐计划', status: '在线', cost: '¥12,300' },
@@ -146,24 +160,66 @@ const monitors = reactive([
 
 const tags = reactive(['投放安全', '成本优化', '流量保护', '实验组']);
 
-let timer;
-
-onMounted(() => {
-  timer = setInterval(() => {
-    insightProgress.value = Math.min(100, insightProgress.value + 10);
-    if (insightProgress.value >= 100) insightProgress.value = 30;
-  }, 900);
-});
-
-onUnmounted(() => clearInterval(timer));
-
 const openBudget = (item) => {
   activeBudget.value = item;
+  budgetForm.daily = Number(item.cost.replace(/[^0-9]/g, '')) || 0;
+  budgetForm.cap = budgetForm.daily * 2;
 };
 
 const openInsight = (item) => {
   activeInsight.value = item;
 };
+
+const generateReport = () => {
+  const entry = {
+    title: `${reportRange.value} 报表`,
+    format: reportFormat.value,
+    time: Date.now()
+  };
+  reports.unshift(entry);
+  statusMessage.value = `${entry.title} 已生成 (${entry.format})`;
+  showReport.value = false;
+};
+
+const saveSetting = () => {
+  statusMessage.value = `配置已保存：流量${settingForm.protect}，审批${settingForm.review}`;
+  showSetting.value = false;
+};
+
+const submitBudget = () => {
+  if (activeBudget.value) {
+    activeBudget.value.cost = `¥${budgetForm.daily.toLocaleString()}`;
+    activeBudget.value.status = '预算已调优';
+    statusMessage.value = `${activeBudget.value.name} 日预算调整为 ¥${budgetForm.daily.toLocaleString()}`;
+  }
+  activeBudget.value = null;
+};
+
+const refreshMonitors = () => {
+  monitors.forEach((item) => (item.value = Math.min(220, item.value + 20)));
+  statusMessage.value = '监控数据已刷新';
+  showMonitor.value = false;
+};
+
+watch(
+  () => activeInsight.value,
+  (insight) => {
+    clearInterval(insightTimer);
+    if (insight) {
+      insightProgress.value = 30;
+      insightTimer = setInterval(() => {
+        insightProgress.value = Math.min(100, insightProgress.value + 12);
+        if (insightProgress.value >= 100) {
+          statusMessage.value = `${insight.name} 曝光洞察已生成`;
+          activeInsight.value = null;
+          clearInterval(insightTimer);
+        }
+      }, 700);
+    }
+  }
+);
+
+onUnmounted(() => clearInterval(insightTimer));
 </script>
 
 <script>
@@ -197,5 +253,16 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.reports ul {
+  padding-left: 16px;
+  margin: 6px 0 0;
+}
+
+.status {
+  margin: 6px 0;
+  font-weight: 600;
+  color: #111827;
 }
 </style>

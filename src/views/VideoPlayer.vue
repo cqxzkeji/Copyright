@@ -4,10 +4,12 @@
       <div class="player-shell">
         <div class="video-simulate">播放窗口</div>
         <div class="player-controls">
+          <span class="chip inline">当前倍速：{{ currentRate }}</span>
           <button class="btn" @click="showPlayHint = true">播放提示</button>
           <button class="btn secondary" @click="showRate = true">倍速</button>
           <button class="btn" @click="showCapture = true">截图分享</button>
         </div>
+        <p v-if="captureLink" class="muted">{{ captureLink }}</p>
       </div>
     </section>
     <section class="card">
@@ -26,6 +28,7 @@
           {{ item.hour }}
         </div>
       </div>
+      <p v-if="exportInfo" class="muted">{{ exportInfo }}</p>
     </section>
   </div>
 
@@ -35,9 +38,9 @@
   </Modal>
 
   <Modal v-if="showRate" title="调整倍速" @close="showRate = false">
-    <form class="form-grid" @submit.prevent="showRate = false">
+    <form class="form-grid" @submit.prevent="applyRate">
       <label>选择倍速</label>
-      <select>
+      <select v-model="rateSelection">
         <option>0.75x</option>
         <option>1.0x</option>
         <option>1.25x</option>
@@ -48,7 +51,7 @@
   </Modal>
 
   <Modal v-if="showCapture" title="截图分享" @close="showCapture = false">
-    <p>正在生成高分辨率截图...</p>
+    <p>正在生成高分辨率截图... {{ captureProgress }}%</p>
     <div class="progress">
       <div class="progress-bar" :style="{ width: captureProgress + '%' }"></div>
     </div>
@@ -56,11 +59,11 @@
   </Modal>
 
   <Modal v-if="showLog" title="导出播放日志" @close="showLog = false">
-    <form class="form-grid" @submit.prevent="showLog = false">
+    <form class="form-grid" @submit.prevent="exportLog">
       <label>时间范围</label>
-      <input type="date" />
+      <input v-model="logForm.date" type="date" />
       <label>导出格式</label>
-      <select>
+      <select v-model="logForm.format">
         <option>CSV</option>
         <option>JSON</option>
       </select>
@@ -70,13 +73,19 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, onUnmounted } from 'vue';
+import { reactive, ref, onUnmounted, watch } from 'vue';
 
 const showPlayHint = ref(false);
 const showRate = ref(false);
 const showCapture = ref(false);
 const showLog = ref(false);
 const captureProgress = ref(18);
+const currentRate = ref('1.0x');
+const rateSelection = ref('1.0x');
+const captureLink = ref('');
+const exportInfo = ref('');
+const logForm = reactive({ date: '', format: 'CSV' });
+let captureTimer;
 
 const metrics = reactive([
   { label: '实时在线', value: '1,230' },
@@ -94,15 +103,39 @@ const chart = reactive(
   }))
 );
 
-let timer;
-onMounted(() => {
-  timer = setInterval(() => {
-    captureProgress.value = Math.min(100, captureProgress.value + 12);
-    if (captureProgress.value >= 100) captureProgress.value = 18;
-  }, 900);
-});
+watch(
+  () => showCapture.value,
+  (open) => {
+    clearInterval(captureTimer);
+    if (open) {
+      captureProgress.value = 12;
+      captureLink.value = '';
+      captureTimer = setInterval(() => {
+        captureProgress.value = Math.min(100, captureProgress.value + 18);
+        if (captureProgress.value >= 100) {
+          captureLink.value = '截图已生成，可复制链接分享';
+          clearInterval(captureTimer);
+        }
+      }, 600);
+    }
+  }
+);
 
-onUnmounted(() => clearInterval(timer));
+const applyRate = () => {
+  currentRate.value = rateSelection.value;
+  exportInfo.value = `已切换倍速至 ${rateSelection.value}`;
+  showRate.value = false;
+};
+
+const exportLog = () => {
+  const dateRange = logForm.date || '今天';
+  exportInfo.value = `${dateRange} 的播放日志以 ${logForm.format} 导出`;
+  showLog.value = false;
+};
+
+onUnmounted(() => {
+  clearInterval(captureTimer);
+});
 </script>
 
 <script>

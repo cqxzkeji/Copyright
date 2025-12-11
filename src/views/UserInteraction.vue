@@ -9,12 +9,14 @@
           <button class="btn" @click="showTips = true">提示</button>
         </div>
       </div>
+      <p v-if="statusMessage" class="status">{{ statusMessage }}</p>
       <table class="table">
         <thead>
           <tr>
             <th>用户</th>
             <th>评论</th>
             <th>视频</th>
+            <th>状态</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -23,6 +25,9 @@
             <td>{{ item.user }}</td>
             <td>{{ item.content }}</td>
             <td>{{ item.video }}</td>
+            <td>
+              <span class="badge">{{ item.status }}</span>
+            </td>
             <td>
               <button class="btn secondary" @click="openFollow(item)">关注</button>
               <button class="btn" @click="openSend(item)">私信</button>
@@ -49,13 +54,16 @@
           <span>{{ item.day }}</span>
         </div>
       </div>
+      <div class="chips" v-if="mutedWords.length">
+        <span class="chip" v-for="word in mutedWords" :key="word">{{ word }}</span>
+      </div>
     </section>
   </div>
 
   <Modal v-if="showReply" title="批量回复" @close="showReply = false">
-    <form class="form-grid" @submit.prevent="showReply = false">
+    <form class="form-grid" @submit.prevent="submitReply">
       <label>选择模板</label>
-      <select>
+      <select v-model="replyTemplate">
         <option>感谢关注</option>
         <option>活动提醒</option>
         <option>客服转接</option>
@@ -67,9 +75,9 @@
   </Modal>
 
   <Modal v-if="showMute" title="关键词屏蔽" @close="showMute = false">
-    <form class="form-grid" @submit.prevent="showMute = false">
+    <form class="form-grid" @submit.prevent="submitMute">
       <label>新增关键词</label>
-      <input placeholder="输入屏蔽词" />
+      <input v-model="muteWord" placeholder="输入屏蔽词" />
       <label>生效范围</label>
       <select>
         <option>所有视频</option>
@@ -86,13 +94,13 @@
 
   <Modal v-if="activeFollow" :title="`关注 ${activeFollow.user}`" @close="activeFollow = null">
     <p>关注后将优先推送该用户评论动态。</p>
-    <button class="btn" @click="activeFollow = null">确认</button>
+    <button class="btn" @click="confirmFollow">确认</button>
   </Modal>
 
   <Modal v-if="activeSend" :title="`私信 ${activeSend.user}`" @close="activeSend = null">
-    <form class="form-grid" @submit.prevent="activeSend = null">
+    <form class="form-grid" @submit.prevent="submitSend">
       <label>消息内容</label>
-      <textarea rows="3" placeholder="输入关怀或客服信息"></textarea>
+      <textarea v-model="messageContent" rows="3" placeholder="输入关怀或客服信息"></textarea>
       <button class="btn" type="submit">发送消息</button>
     </form>
   </Modal>
@@ -106,7 +114,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, onUnmounted } from 'vue';
+import { reactive, ref, onUnmounted, watch } from 'vue';
 
 const showReply = ref(false);
 const showMute = ref(false);
@@ -115,20 +123,26 @@ const showExport = ref(false);
 const exportProgress = ref(12);
 const activeFollow = ref(null);
 const activeSend = ref(null);
+const statusMessage = ref('');
+const replyTemplate = ref('感谢关注');
+const muteWord = ref('');
+const messageContent = ref('');
+const mutedWords = reactive(['涉政', '引流', '广告']);
+let exportTimer;
 
 const interactions = reactive([
-  { id: 1, user: '青柠汽水', content: '这音乐太好听了！', video: '街头音乐合集' },
-  { id: 2, user: '北城', content: '求同款滤镜', video: '夜景延时摄影' },
-  { id: 3, user: '花枝丸', content: '想看完整版', video: '森林露营 24 小时' },
-  { id: 4, user: '南风知意', content: '下次试试近景', video: '咖啡拉花大师' },
-  { id: 5, user: '小鲸鱼', content: '求开源脚本', video: '科技新品 30s 速览' },
-  { id: 6, user: '夏日序曲', content: '这拍摄角度绝了', video: '滑板少年的一天' },
-  { id: 7, user: '云上', content: '点赞了！', video: '萌宠日常混剪' },
-  { id: 8, user: '灿烂', content: '转发到朋友圈了', video: '夜市烟火气记录' },
-  { id: 9, user: '拾光', content: 'bgm 是啥？', video: '高铁疾驰窗景' },
-  { id: 10, user: '枝桠', content: '求同款背包链接', video: '森林露营 24 小时' },
-  { id: 11, user: '白鹭', content: '配色很高级', video: '手绘插画过程' },
-  { id: 12, user: '三木', content: '太治愈了', video: '萌宠日常混剪' }
+  { id: 1, user: '青柠汽水', content: '这音乐太好听了！', video: '街头音乐合集', status: '未处理' },
+  { id: 2, user: '北城', content: '求同款滤镜', video: '夜景延时摄影', status: '未处理' },
+  { id: 3, user: '花枝丸', content: '想看完整版', video: '森林露营 24 小时', status: '未处理' },
+  { id: 4, user: '南风知意', content: '下次试试近景', video: '咖啡拉花大师', status: '未处理' },
+  { id: 5, user: '小鲸鱼', content: '求开源脚本', video: '科技新品 30s 速览', status: '未处理' },
+  { id: 6, user: '夏日序曲', content: '这拍摄角度绝了', video: '滑板少年的一天', status: '未处理' },
+  { id: 7, user: '云上', content: '点赞了！', video: '萌宠日常混剪', status: '未处理' },
+  { id: 8, user: '灿烂', content: '转发到朋友圈了', video: '夜市烟火气记录', status: '未处理' },
+  { id: 9, user: '拾光', content: 'bgm 是啥？', video: '高铁疾驰窗景', status: '未处理' },
+  { id: 10, user: '枝桠', content: '求同款背包链接', video: '森林露营 24 小时', status: '未处理' },
+  { id: 11, user: '白鹭', content: '配色很高级', video: '手绘插画过程', status: '未处理' },
+  { id: 12, user: '三木', content: '太治愈了', video: '萌宠日常混剪', status: '未处理' }
 ]);
 
 const stats = reactive([
@@ -145,24 +159,72 @@ const trend = reactive(
   }))
 );
 
-let timer;
+const formatNumber = (value) => {
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
 
-onMounted(() => {
-  timer = setInterval(() => {
-    exportProgress.value = Math.min(100, exportProgress.value + 15);
-    if (exportProgress.value >= 100) exportProgress.value = 12;
-  }, 1000);
-});
+const submitReply = () => {
+  interactions.forEach((item) => (item.status = '已回复'));
+  const base = parseInt(stats[0].value.replace(/,/g, ''), 10) || 0;
+  stats[0].value = formatNumber(base + interactions.length);
+  statusMessage.value = `${replyTemplate.value} 模板已应用，回复 ${interactions.length} 条评论`;
+  showReply.value = false;
+};
 
-onUnmounted(() => clearInterval(timer));
+const submitMute = () => {
+  if (muteWord.value.trim()) {
+    mutedWords.push(muteWord.value.trim());
+    statusMessage.value = `已新增屏蔽词：${muteWord.value}`;
+    muteWord.value = '';
+  }
+  showMute.value = false;
+};
 
 const openFollow = (item) => {
   activeFollow.value = item;
 };
 
+const confirmFollow = () => {
+  if (activeFollow.value) {
+    activeFollow.value.status = '已关注';
+    statusMessage.value = `已关注 ${activeFollow.value.user}`;
+  }
+  activeFollow.value = null;
+};
+
 const openSend = (item) => {
   activeSend.value = item;
 };
+
+const submitSend = () => {
+  if (activeSend.value) {
+    activeSend.value.status = '已私信';
+    const base = parseInt(stats[2].value.replace(/,/g, ''), 10) || 0;
+    stats[2].value = formatNumber(base + 1);
+    statusMessage.value = `${activeSend.value.user} 私信已发送`;
+  }
+  messageContent.value = '';
+  activeSend.value = null;
+};
+
+watch(
+  () => showExport.value,
+  (open) => {
+    clearInterval(exportTimer);
+    if (open) {
+      exportProgress.value = 12;
+      exportTimer = setInterval(() => {
+        exportProgress.value = Math.min(100, exportProgress.value + 15);
+        if (exportProgress.value >= 100) {
+          statusMessage.value = '互动记录导出完成，已发送到邮箱';
+          clearInterval(exportTimer);
+        }
+      }, 800);
+    }
+  }
+);
+
+onUnmounted(() => clearInterval(exportTimer));
 </script>
 
 <script>
@@ -223,5 +285,18 @@ export default {
 
 .label {
   color: #6b7280;
+}
+
+.status {
+  margin: 6px 0;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
 }
 </style>
