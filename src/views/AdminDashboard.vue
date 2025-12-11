@@ -1,0 +1,201 @@
+<template>
+  <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 16px;">
+    <section class="card">
+      <div class="header">
+        <h2>管理与分析</h2>
+        <div class="actions">
+          <button class="btn" @click="showReport = true">生成报表</button>
+          <button class="btn secondary" @click="showAlert = true">告警</button>
+          <button class="btn" @click="showSetting = true">配置</button>
+        </div>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>名称</th>
+            <th>类型</th>
+            <th>状态</th>
+            <th>消耗</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in projects" :key="item.name">
+            <td>{{ item.name }}</td>
+            <td>{{ item.type }}</td>
+            <td><span class="badge">{{ item.status }}</span></td>
+            <td>{{ item.cost }}</td>
+            <td>
+              <button class="btn secondary" @click="openBudget(item)">预算</button>
+              <button class="btn" @click="openInsight(item)">洞察</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div class="header">
+        <h3>监控概览</h3>
+        <button class="btn secondary" @click="showMonitor = true">刷新</button>
+      </div>
+      <div class="dashboard-chart">
+        <div v-for="item in monitors" :key="item.label" class="bar" :style="{ height: item.value + 'px' }">
+          {{ item.label }}
+        </div>
+      </div>
+      <ul class="chips">
+        <li v-for="item in tags" :key="item" class="chip">{{ item }}</li>
+      </ul>
+    </section>
+  </div>
+
+  <Modal v-if="showReport" title="生成报表" @close="showReport = false">
+    <form class="form-grid" @submit.prevent="showReport = false">
+      <label>选择周期</label>
+      <select>
+        <option>最近 7 天</option>
+        <option>最近 30 天</option>
+      </select>
+      <label>输出格式</label>
+      <select>
+        <option>PDF</option>
+        <option>XLSX</option>
+      </select>
+      <button class="btn" type="submit">生成</button>
+    </form>
+  </Modal>
+
+  <Modal v-if="showAlert" title="平台告警" @close="showAlert = false">
+    <p>发现 2 条数据异常，已自动降级部分推荐位。</p>
+    <button class="btn" @click="showAlert = false">确认</button>
+  </Modal>
+
+  <Modal v-if="showSetting" title="配置开关" @close="showSetting = false">
+    <form class="form-grid" @submit.prevent="showSetting = false">
+      <label>流量保护</label>
+      <select>
+        <option>自动</option>
+        <option>手动</option>
+      </select>
+      <label>发布审批</label>
+      <select>
+        <option>需要</option>
+        <option>跳过</option>
+      </select>
+      <button class="btn" type="submit">保存配置</button>
+    </form>
+  </Modal>
+
+  <Modal v-if="activeBudget" :title="`调整 ${activeBudget.name} 预算`" @close="activeBudget = null">
+    <form class="form-grid" @submit.prevent="activeBudget = null">
+      <label>日预算</label>
+      <input type="number" min="0" step="500" />
+      <label>投放上限</label>
+      <input type="number" min="0" step="1000" />
+      <button class="btn" type="submit">保存</button>
+    </form>
+  </Modal>
+
+  <Modal v-if="activeInsight" :title="`${activeInsight.name} 洞察`" @close="activeInsight = null">
+    <p>正在生成频道曝光曲线...</p>
+    <div class="progress">
+      <div class="progress-bar" :style="{ width: insightProgress + '%' }"></div>
+    </div>
+  </Modal>
+
+  <Modal v-if="showMonitor" title="刷新监控" @close="showMonitor = false">
+    <p>刷新会重新计算质量分，预计耗时 30 秒。</p>
+    <button class="btn" @click="showMonitor = false">开始刷新</button>
+  </Modal>
+</template>
+
+<script setup>
+import { reactive, ref, onMounted, onUnmounted } from 'vue';
+
+const showReport = ref(false);
+const showAlert = ref(false);
+const showSetting = ref(false);
+const showMonitor = ref(false);
+const insightProgress = ref(30);
+const activeBudget = ref(null);
+const activeInsight = ref(null);
+
+const projects = reactive([
+  { name: '城市夜景池', type: '推荐计划', status: '在线', cost: '¥12,300' },
+  { name: '新品测温', type: '品牌活动', status: '暂停', cost: '¥8,120' },
+  { name: '创作者孵化', type: '运营', status: '在线', cost: '¥6,430' },
+  { name: '夜市直播带货', type: '直播', status: '排期', cost: '¥9,120' },
+  { name: '手绘创作节', type: '活动', status: '排期', cost: '¥4,300' },
+  { name: '萌宠主题周', type: '主题策划', status: '在线', cost: '¥10,200' },
+  { name: '高铁旅行季', type: '推广', status: '暂停', cost: '¥3,800' },
+  { name: '健身挑战赛', type: '活动', status: '在线', cost: '¥5,900' },
+  { name: '滑板新星计划', type: '招募', status: '审核中', cost: '¥2,700' },
+  { name: '咖啡主题周', type: '主题策划', status: '在线', cost: '¥4,600' },
+  { name: '街头音乐节', type: '活动', status: '在线', cost: '¥6,700' },
+  { name: '露营季', type: '推荐计划', status: '在线', cost: '¥7,300' }
+]);
+
+const monitors = reactive([
+  { label: '播放', value: 140 },
+  { label: '互动', value: 170 },
+  { label: '转化', value: 120 },
+  { label: '留存', value: 150 },
+  { label: '风控', value: 110 }
+]);
+
+const tags = reactive(['投放安全', '成本优化', '流量保护', '实验组']);
+
+let timer;
+
+onMounted(() => {
+  timer = setInterval(() => {
+    insightProgress.value = Math.min(100, insightProgress.value + 10);
+    if (insightProgress.value >= 100) insightProgress.value = 30;
+  }, 900);
+});
+
+onUnmounted(() => clearInterval(timer));
+
+const openBudget = (item) => {
+  activeBudget.value = item;
+};
+
+const openInsight = (item) => {
+  activeInsight.value = item;
+};
+</script>
+
+<script>
+const Modal = {
+  name: 'Modal',
+  props: ['title'],
+  emits: ['close'],
+  template: `
+    <div class="modal-overlay" @click.self="$emit('close')">
+      <div class="modal">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <h3 style="margin:0;">{{ title }}</h3>
+          <button class="btn secondary" @click="$emit('close')">关闭</button>
+        </div>
+        <slot />
+      </div>
+    </div>
+  `
+};
+
+export default {
+  components: { Modal }
+};
+</script>
+
+<style scoped>
+.chips {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+</style>
