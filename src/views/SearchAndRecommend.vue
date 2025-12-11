@@ -168,12 +168,15 @@ const runSearch = () => {
     boundTo: '',
     boosted: false
   });
+  if (!tags.includes(keyword.value)) tags.push(keyword.value);
   searchResult.value = `${keyword.value} 搜索完成，新增了实时热度数据`;
   showQuery.value = false;
 };
 
 const submitStrategy = () => {
   strategySummary.value = `策略已保存：${strategy.tendency}，权重 ${strategy.weight}%`;
+  const lift = 1 + strategy.weight / 300;
+  recommend.forEach((item) => (item.value = Math.min(260, Math.round(item.value * lift))));
   showStrategy.value = false;
 };
 
@@ -198,6 +201,7 @@ const openBoost = (item) => {
     if (boostProgress.value >= 100 && activeBoost.value) {
       activeBoost.value.boosted = true;
       searchResult.value = `${activeBoost.value.word} 冲榜完成并进入推荐位`;
+      recommend.unshift({ scene: activeBoost.value.word, value: 180 });
       activeBoost.value = null;
       clearInterval(boostTimer);
     }

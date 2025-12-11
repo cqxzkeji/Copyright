@@ -354,7 +354,13 @@ onMounted(() => {
         batchTimer = setInterval(() => {
           batchProgress.value = Math.min(100, batchProgress.value + 12);
           if (batchProgress.value >= 100) {
-            actionMessage.value = '批量发布完成，已进入审核队列';
+            schedule.forEach((item, index) => {
+              if (index < 5) {
+                item.status = '发布完成';
+                item.note = '批量任务完成';
+              }
+            });
+            actionMessage.value = '批量发布完成，首批 5 条已提交审核';
             clearInterval(batchTimer);
           }
         }, 600);

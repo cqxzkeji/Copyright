@@ -103,6 +103,13 @@ const chart = reactive(
   }))
 );
 
+const updateMetric = (label, updater) => {
+  const target = metrics.find((item) => item.label === label);
+  if (target) {
+    target.value = updater(target.value);
+  }
+};
+
 watch(
   () => showCapture.value,
   (open) => {
@@ -114,6 +121,7 @@ watch(
         captureProgress.value = Math.min(100, captureProgress.value + 18);
         if (captureProgress.value >= 100) {
           captureLink.value = '截图已生成，可复制链接分享';
+          updateMetric('分享', (val) => `${Number(val.replace(/,/g, '')) + 3}`);
           clearInterval(captureTimer);
         }
       }, 600);
@@ -124,6 +132,7 @@ watch(
 const applyRate = () => {
   currentRate.value = rateSelection.value;
   exportInfo.value = `已切换倍速至 ${rateSelection.value}`;
+  updateMetric('完播率', () => `${Math.min(99, Number(currentRate.value.replace('x', '')) * 76).toFixed(0)}%`);
   showRate.value = false;
 };
 

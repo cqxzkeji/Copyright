@@ -174,7 +174,10 @@ const submitReply = () => {
 const submitMute = () => {
   if (muteWord.value.trim()) {
     mutedWords.push(muteWord.value.trim());
-    statusMessage.value = `已新增屏蔽词：${muteWord.value}`;
+    interactions.forEach((item) => {
+      if (item.content.includes(muteWord.value.trim())) item.status = '已屏蔽';
+    });
+    statusMessage.value = `已新增屏蔽词：${muteWord.value}，相关评论已标记`; 
     muteWord.value = '';
   }
   showMute.value = false;

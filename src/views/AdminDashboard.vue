@@ -196,7 +196,9 @@ const submitBudget = () => {
 };
 
 const refreshMonitors = () => {
-  monitors.forEach((item) => (item.value = Math.min(220, item.value + 20)));
+  monitors.forEach((item) => (item.value = Math.min(220, item.value + Math.round(Math.random() * 25))));
+  const newTag = `刷新于 ${new Date().toLocaleTimeString()}`;
+  tags.push(newTag);
   statusMessage.value = '监控数据已刷新';
   showMonitor.value = false;
 };
