@@ -74,6 +74,7 @@
 
 <script setup>
 import { reactive, ref, onUnmounted, watch } from 'vue';
+import Modal from '../components/Modal.vue';
 
 const showPlayHint = ref(false);
 const showRate = ref(false);
@@ -145,29 +146,6 @@ const exportLog = () => {
 onUnmounted(() => {
   clearInterval(captureTimer);
 });
-</script>
-
-<script>
-const Modal = {
-  name: 'Modal',
-  props: ['title'],
-  emits: ['close'],
-  template: `
-    <div class="modal-overlay" @click.self="$emit('close')">
-      <div class="modal">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-          <h3 style="margin:0;">{{ title }}</h3>
-          <button class="btn secondary" @click="$emit('close')">关闭</button>
-        </div>
-        <slot />
-      </div>
-    </div>
-  `
-};
-
-export default {
-  components: { Modal }
-};
 </script>
 
 <style scoped>
