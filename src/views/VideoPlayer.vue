@@ -2,13 +2,21 @@
   <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 16px;">
     <section class="card player">
       <div class="player-shell">
-        <div class="video-simulate">播放窗口</div>
+        <video
+          ref="playerRef"
+          class="video-simulate"
+          :src="videoSource"
+          controls
+          playsinline
+          @error="playerError = '演示视频加载失败，请检查网络连接'"
+        ></video>
         <div class="player-controls">
           <span class="chip inline">当前倍速：{{ currentRate }}</span>
           <button class="btn" @click="showPlayHint = true">播放提示</button>
           <button class="btn secondary" @click="showRate = true">倍速</button>
           <button class="btn" @click="showCapture = true">截图分享</button>
         </div>
+        <p v-if="playerError" class="status">{{ playerError }}</p>
         <p v-if="captureLink" class="muted">{{ captureLink }}</p>
       </div>
     </section>
@@ -76,6 +84,9 @@
 import { reactive, ref, onUnmounted, watch } from 'vue';
 import Modal from '../components/Modal.vue';
 
+const videoSource =
+  'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4';
+const playerRef = ref(null);
 const showPlayHint = ref(false);
 const showRate = ref(false);
 const showCapture = ref(false);
@@ -85,6 +96,7 @@ const currentRate = ref('1.0x');
 const rateSelection = ref('1.0x');
 const captureLink = ref('');
 const exportInfo = ref('');
+const playerError = ref('');
 const logForm = reactive({ date: '', format: 'CSV' });
 let captureTimer;
 
@@ -134,6 +146,9 @@ const applyRate = () => {
   currentRate.value = rateSelection.value;
   exportInfo.value = `已切换倍速至 ${rateSelection.value}`;
   updateMetric('完播率', () => `${Math.min(99, Number(currentRate.value.replace('x', '')) * 76).toFixed(0)}%`);
+  if (playerRef.value) {
+    playerRef.value.playbackRate = Number(rateSelection.value.replace('x', ''));
+  }
   showRate.value = false;
 };
 
@@ -165,11 +180,9 @@ onUnmounted(() => {
   background: #0f172a;
   height: 260px;
   border-radius: 14px;
-  display: grid;
-  place-items: center;
-  color: #fff;
-  font-size: 22px;
-  letter-spacing: 1px;
+  width: 100%;
+  object-fit: cover;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 .player-controls {
