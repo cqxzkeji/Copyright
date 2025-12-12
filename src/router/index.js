@@ -10,6 +10,10 @@ import ManagementDashboard from '../views/ManagementDashboard.vue'
 const routes = [
   {
     path: '/',
+    redirect: '/login'
+  },
+  {
+    path: '/login',
     name: 'login',
     component: Login
   },
@@ -18,17 +22,21 @@ const routes = [
     component: MainLayout,
     children: [
       { path: '', redirect: '/main/content' },
-      { path: 'content', component: ContentGeneration },
-      { path: 'analysis', component: DataAnalysis },
-      { path: 'training', component: ModelTraining },
-      { path: 'ui', component: InteractiveUI },
-      { path: 'management', component: ManagementDashboard }
+      { path: 'content', name: 'content', component: ContentGeneration },
+      { path: 'analysis', name: 'analysis', component: DataAnalysis },
+      { path: 'training', name: 'training', component: ModelTraining },
+      { path: 'ui', name: 'ui', component: InteractiveUI },
+      { path: 'management', name: 'management', component: ManagementDashboard }
     ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/login'
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
 
