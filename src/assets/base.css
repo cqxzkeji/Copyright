@@ -1,0 +1,157 @@
+:root {
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  color: #1f2937;
+  background-color: #f5f7fb;
+  line-height: 1.6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f9fbff 0%, #eef3ff 100%);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.btn {
+  background: linear-gradient(135deg, #4f8bff 0%, #61c3ff 100%);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 8px 20px rgba(79, 139, 255, 0.3);
+}
+
+.btn.secondary {
+  background: #e5e7eb;
+  color: #1f2937;
+  box-shadow: none;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(79, 139, 255, 0.35);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 18px rgba(31, 41, 55, 0.08);
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: #e0edff;
+  color: #1d4ed8;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  width: min(90%, 560px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+}
+
+.form-grid {
+  display: grid;
+  gap: 12px;
+}
+
+label {
+  font-weight: 600;
+  color: #111827;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+}
+
+.progress {
+  width: 100%;
+  height: 12px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(135deg, #22c55e 0%, #4ade80 100%);
+}
+
+.chip {
+  padding: 6px 10px;
+  background: #f3f4f6;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.dashboard-chart {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.bar {
+  height: 120px;
+  background: linear-gradient(180deg, #dbeafe 0%, #93c5fd 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  color: #1f2937;
+  font-weight: 700;
+  padding-bottom: 8px;
+}
