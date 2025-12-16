@@ -24,14 +24,14 @@
         </div>
       </header>
       <div class="card" style="min-height: calc(100vh - 120px);">
-        <slot />
+        <RouterView />
       </div>
     </main>
   </div>
 </template>
 
 <script setup>
-import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
