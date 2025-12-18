@@ -1,0 +1,189 @@
+:root {
+  --primary: #3a86ff;
+  --secondary: #ffbe0b;
+  --accent: #8338ec;
+  --bg: #f7f9fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at 10% 20%, rgba(131, 56, 236, 0.08), transparent 25%),
+    radial-gradient(circle at 90% 10%, rgba(58, 134, 255, 0.08), transparent 20%),
+    var(--bg);
+  color: var(--text);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 16px;
+}
+
+.modal {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 20px;
+  width: min(520px, 100%);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+}
+
+.modal h3 {
+  margin-top: 0;
+}
+
+.modal form {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.modal label {
+  font-weight: 600;
+}
+
+.modal input,
+.modal select,
+.modal textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #f8fafc;
+}
+
+.modal .actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.table-card {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border);
+}
+
+.table-card table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.table-card th,
+.table-card td {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.table-card th {
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.table-card tbody tr:hover {
+  background: #f5f7ff;
+}
+
+.btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  box-shadow: 0 10px 25px rgba(58, 134, 255, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn.secondary {
+  background: linear-gradient(135deg, var(--secondary), #ff9f1c);
+  color: #111827;
+  box-shadow: 0 10px 20px rgba(255, 190, 11, 0.35);
+}
+
+.btn.outline {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  box-shadow: none;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(58, 134, 255, 0.28);
+}
+
+.section-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 960px) {
+  .grid.two {
+    grid-template-columns: 2fr 1fr;
+  }
+
+  .grid.three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+table .status-green {
+  color: #15803d;
+}
+
+table .status-orange {
+  color: #c2410c;
+}
+
+table .status-blue {
+  color: #1d4ed8;
+}
+
+table .status-purple {
+  color: #6d28d9;
+}
