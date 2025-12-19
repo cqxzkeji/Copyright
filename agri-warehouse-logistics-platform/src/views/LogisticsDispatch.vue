@@ -3,7 +3,8 @@
     <div class="grid two">
       <div class="card">
         <div class="section-title">运输线路态势</div>
-        <div class="hero-image">干线与支线运力图</div>
+        <p>今日已发车 42 班次，跨省协同线路 16 条。</p>
+        <p style="margin-top: 8px; color: #6b7280;">预计 3 条线路需调整，建议提前预留运力。</p>
       </div>
       <div class="card">
         <div class="section-title">车辆载重利用率</div>

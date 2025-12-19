@@ -3,7 +3,8 @@
     <div class="grid two">
       <div class="card">
         <div class="section-title">供应计划节奏</div>
-        <div class="hero-image">订单协同可视化面板</div>
+        <p>本周计划总量 825 吨，滚动补货覆盖 7 大区域。</p>
+        <p style="margin-top: 8px; color: #6b7280;">核心客户协同完成率达 89%，重点订单稳定。</p>
       </div>
       <div class="card">
         <div class="section-title">订单履约完成率</div>

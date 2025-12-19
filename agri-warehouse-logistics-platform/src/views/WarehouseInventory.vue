@@ -3,7 +3,8 @@
     <div class="grid two">
       <div class="card">
         <div class="section-title">库区温湿度监测</div>
-        <div class="hero-image">智能仓储环境监控</div>
+        <p>今日温度 2.5℃ ～ 6.8℃，湿度 62% ～ 70%。</p>
+        <p style="margin-top: 8px; color: #6b7280;">冷链仓区温湿度波动低于 3%，运行稳定。</p>
       </div>
       <div class="card">
         <div class="section-title">库存周转趋势</div>

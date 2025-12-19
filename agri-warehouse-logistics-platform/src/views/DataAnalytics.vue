@@ -3,7 +3,8 @@
     <div class="grid two">
       <div class="card">
         <div class="section-title">数据风险热力图</div>
-        <div class="hero-image">市场波动预警可视化</div>
+        <p>市场波动指数 7.2，供应风险分布集中在华南区域。</p>
+        <p style="margin-top: 8px; color: #6b7280;">模型识别 5 类潜在风险，已生成应对策略。</p>
       </div>
       <div class="card">
         <div class="section-title">预警指数趋势</div>

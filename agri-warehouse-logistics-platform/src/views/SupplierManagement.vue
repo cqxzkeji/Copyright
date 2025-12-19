@@ -3,7 +3,8 @@
     <div class="grid two">
       <div class="card">
         <div class="section-title">产地分布与合作热度</div>
-        <div class="hero-image">产地签约图谱 · 实时更新</div>
+        <p>已覆盖 18 个重点产区，核心合作主体 126 家。</p>
+        <p style="margin-top: 8px; color: #6b7280;">近七日新增合作主体 9 家，协同等级提升 6 家。</p>
       </div>
       <div class="card">
         <div class="section-title">供应主体活跃度</div>
