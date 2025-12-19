@@ -14,11 +14,10 @@
 
     <div class="media-grid">
       <div class="card">
-        <h4>温控曲线</h4>
-        <svg viewBox="0 0 320 160" aria-label="温控曲线">
-          <path d="M10 120 Q60 60 110 90 T210 70 T310 50" stroke="#14b8a6" stroke-width="4" fill="none" />
-        </svg>
-        <p>冷库 A 温控稳定在 4℃。</p>
+        <h4>温控动态</h4>
+        <div class="placeholder-box">
+          <p>冷库 A 温控稳定在 4℃，过去 24 小时无波动。</p>
+        </div>
       </div>
       <div class="card">
         <h4>设备分布</h4>
@@ -171,12 +170,14 @@ const inventory = [
   margin: 10px 0;
 }
 
-.card svg {
-  width: 100%;
-  height: 160px;
+.placeholder-box {
   background: #ffffff;
   border-radius: 12px;
-  margin: 10px 0;
+  padding: 18px;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  color: #475569;
 }
 
 .table-card {

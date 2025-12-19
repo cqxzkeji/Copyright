@@ -14,16 +14,10 @@
 
     <div class="media-grid">
       <div class="card">
-        <h4>运输网络图</h4>
-        <svg viewBox="0 0 320 160" aria-label="运输网络图">
-          <rect x="20" y="30" width="80" height="40" rx="12" fill="#bfdbfe" />
-          <rect x="200" y="20" width="90" height="50" rx="12" fill="#bbf7d0" />
-          <rect x="120" y="100" width="90" height="40" rx="12" fill="#fde68a" />
-          <path d="M100 50 L200 45" stroke="#2563eb" stroke-width="3" />
-          <path d="M80 70 L160 110" stroke="#2563eb" stroke-width="3" />
-          <path d="M245 70 L180 110" stroke="#2563eb" stroke-width="3" />
-        </svg>
-        <p>当前共 18 条线路同步运行。</p>
+        <h4>运输网络概况</h4>
+        <div class="placeholder-box">
+          <p>当前共 18 条线路同步运行，3 条线路处于高优先级。</p>
+        </div>
       </div>
       <div class="card">
         <h4>调度指标</h4>
@@ -180,12 +174,14 @@ const tasks = [
   margin: 10px 0;
 }
 
-.card svg {
-  width: 100%;
-  height: 160px;
+.placeholder-box {
   background: #ffffff;
   border-radius: 12px;
-  margin: 10px 0;
+  padding: 18px;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  color: #475569;
 }
 
 .table-card {

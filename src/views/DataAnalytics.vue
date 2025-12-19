@@ -14,22 +14,10 @@
 
     <div class="media-grid">
       <div class="card">
-        <h4>指标趋势</h4>
-        <svg viewBox="0 0 320 160" aria-label="指标趋势">
-          <polyline
-            fill="none"
-            stroke="#0ea5e9"
-            stroke-width="4"
-            points="10,120 60,100 110,80 160,60 210,70 260,40 310,50"
-          />
-          <polyline
-            fill="none"
-            stroke="#22c55e"
-            stroke-width="3"
-            points="10,140 60,120 110,110 160,90 210,100 260,70 310,80"
-          />
-        </svg>
-        <p>本月供应链效率提升 8%。</p>
+        <h4>指标摘要</h4>
+        <div class="placeholder-box">
+          <p>本月供应链效率提升 8%，核心 KPI 已完成汇总。</p>
+        </div>
       </div>
       <div class="card">
         <h4>监管概览</h4>
@@ -186,12 +174,14 @@ const metrics = [
   margin: 10px 0;
 }
 
-.card svg {
-  width: 100%;
-  height: 160px;
+.placeholder-box {
   background: #ffffff;
   border-radius: 12px;
-  margin: 10px 0;
+  padding: 18px;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  color: #475569;
 }
 
 .table-card {

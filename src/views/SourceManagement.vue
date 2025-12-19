@@ -19,17 +19,10 @@
         <p>实时卫星图与传感器数据绑定。</p>
       </div>
       <div class="card">
-        <h4>产地巡检趋势</h4>
-        <svg viewBox="0 0 320 160" aria-label="产地巡检趋势">
-          <polyline
-            fill="none"
-            stroke="#2563eb"
-            stroke-width="4"
-            points="10,120 50,90 90,110 130,70 170,60 210,80 250,40 290,50"
-          />
-          <circle v-for="(point, index) in points" :key="index" :cx="point.x" :cy="point.y" r="4" fill="#22c55e" />
-        </svg>
-        <p>巡检次数本月提升 12%。</p>
+        <h4>巡检动态</h4>
+        <div class="placeholder-box">
+          <p>巡检次数本月提升 12%，已覆盖 9 个重点基地。</p>
+        </div>
       </div>
     </div>
 
@@ -106,17 +99,6 @@ const showProgress = ref(false);
 const showInfo = ref(false);
 const progress = ref(72);
 
-const points = [
-  { x: 10, y: 120 },
-  { x: 50, y: 90 },
-  { x: 90, y: 110 },
-  { x: 130, y: 70 },
-  { x: 170, y: 60 },
-  { x: 210, y: 80 },
-  { x: 250, y: 40 },
-  { x: 290, y: 50 }
-];
-
 const batches = [
   { id: 'SC-2401', farm: '清源基地', crop: '有机黄瓜', date: '2024-06-01', manager: '陈林', status: '已登记' },
   { id: 'SC-2402', farm: '绿野基地', crop: '鲜食玉米', date: '2024-06-02', manager: '李娜', status: '采收中' },
@@ -188,12 +170,14 @@ const batches = [
   margin: 10px 0;
 }
 
-.card svg {
-  width: 100%;
-  height: 160px;
+.placeholder-box {
   background: #ffffff;
   border-radius: 12px;
-  margin: 10px 0;
+  padding: 18px;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  color: #475569;
 }
 
 .table-card {

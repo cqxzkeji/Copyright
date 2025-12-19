@@ -14,14 +14,10 @@
 
     <div class="media-grid">
       <div class="card">
-        <h4>质检分布</h4>
-        <svg viewBox="0 0 320 160" aria-label="质检分布">
-          <rect x="20" y="40" width="40" height="80" fill="#86efac" />
-          <rect x="90" y="20" width="40" height="100" fill="#4ade80" />
-          <rect x="160" y="60" width="40" height="60" fill="#22c55e" />
-          <rect x="230" y="30" width="40" height="90" fill="#16a34a" />
-        </svg>
-        <p>本周合格率 99.4%。</p>
+        <h4>质检概况</h4>
+        <div class="placeholder-box">
+          <p>本周合格率 99.4%，抽检覆盖 6 个核心品类。</p>
+        </div>
       </div>
       <div class="card">
         <h4>追溯码样例</h4>
@@ -174,12 +170,14 @@ const inspections = [
   margin: 10px 0;
 }
 
-.card svg {
-  width: 100%;
-  height: 160px;
+.placeholder-box {
   background: #ffffff;
   border-radius: 12px;
-  margin: 10px 0;
+  padding: 18px;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  color: #475569;
 }
 
 .table-card {
