@@ -6,11 +6,11 @@
         <span>Dispatch & Trace</span>
       </div>
       <nav>
-        <RouterLink to="/source-records" class="nav-item">产地/主体与批次档案</RouterLink>
-        <RouterLink to="/dispatch-scheduling" class="nav-item">供应链调度与运输协同</RouterLink>
-        <RouterLink to="/warehousing-inventory" class="nav-item">仓储库存与出入库流转</RouterLink>
-        <RouterLink to="/quality-traceability" class="nav-item">质量检测与溯源追踪</RouterLink>
-        <RouterLink to="/analytics-dashboard" class="nav-item">监控预警与数据分析</RouterLink>
+        <RouterLink to="/app/source-records" class="nav-item">产地/主体与批次档案</RouterLink>
+        <RouterLink to="/app/dispatch-scheduling" class="nav-item">供应链调度与运输协同</RouterLink>
+        <RouterLink to="/app/warehousing-inventory" class="nav-item">仓储库存与出入库流转</RouterLink>
+        <RouterLink to="/app/quality-traceability" class="nav-item">质量检测与溯源追踪</RouterLink>
+        <RouterLink to="/app/analytics-dashboard" class="nav-item">监控预警与数据分析</RouterLink>
       </nav>
       <div class="sidebar-footer">
         <span>在线用户</span>

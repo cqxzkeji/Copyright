@@ -9,13 +9,13 @@ import AnalyticsDashboard from '../views/AnalyticsDashboard.vue'
 
 const routes = [
   {
-    path: '/login',
+    path: '/',
     component: LoginView
   },
   {
-    path: '/',
+    path: '/app',
     component: MainLayout,
-    redirect: '/source-records',
+    redirect: '/app/source-records',
     children: [
       {
         path: 'source-records',
@@ -40,8 +40,12 @@ const routes = [
     ]
   },
   {
+    path: '/login',
+    redirect: '/'
+  },
+  {
     path: '/:pathMatch(.*)*',
-    redirect: '/login'
+    redirect: '/'
   }
 ]
 

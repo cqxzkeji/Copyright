@@ -45,7 +45,7 @@ const form = reactive({
 })
 
 const handleLogin = () => {
-  router.push('/source-records')
+  router.push('/app/source-records')
 }
 </script>
 
