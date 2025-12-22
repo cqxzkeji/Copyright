@@ -151,7 +151,7 @@ const products = [
     desc: '无公害种植，酸甜适口',
     stock: 180,
     tag: '新品',
-    image: 'https://images.unsplash.com/photo-1506807803488-8eafc15323d1?auto=format&fit=crop&w=500&q=80'
+    image: 'https://images.unsplash.com/photo-1561136594-7f68413baa99?auto=format&fit=crop&w=500&q=80'
   },
   {
     id: 3,
