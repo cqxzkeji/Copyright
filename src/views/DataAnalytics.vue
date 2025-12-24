@@ -85,10 +85,10 @@
 
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
-import { Chart, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Legend, Tooltip } from 'chart.js';
+import { Chart, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Legend, Tooltip, LineController } from 'chart.js';
 import ModalDialog from '../components/ModalDialog.vue';
 
-Chart.register(BarElement, CategoryScale, LinearScale, PointElement, LineElement, Legend, Tooltip);
+Chart.register(LineController, BarElement, CategoryScale, LinearScale, PointElement, LineElement, Legend, Tooltip);
 
 const chartRef = ref(null);
 const forecastProgress = ref(30);
