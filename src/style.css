@@ -1,0 +1,239 @@
+:root {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #1f2d3d;
+  background: linear-gradient(135deg, #f0f7ff, #ffffff);
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f6fbff;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #5fb8ff, #7ad7ff);
+  color: #0b2a40;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 25px rgba(95, 184, 255, 0.35);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(95, 184, 255, 0.4);
+}
+
+.btn.secondary {
+  background: linear-gradient(90deg, #ffd66b, #ffb347);
+  box-shadow: 0 10px 25px rgba(255, 179, 71, 0.35);
+}
+
+.btn.ghost {
+  background: #ffffff;
+  color: #1f2d3d;
+  border: 1px solid #e5efff;
+  box-shadow: none;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 16px 45px rgba(31, 45, 61, 0.08);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #eef2f8;
+}
+
+.table th {
+  background: #f3f7ff;
+  color: #2c3f56;
+}
+
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #e8f4ff;
+  color: #2163af;
+}
+
+.status-pill.success {
+  background: #e7f6ec;
+  color: #167449;
+}
+
+.status-pill.warning {
+  background: #fff4e5;
+  color: #b76b0d;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: #eaf3ff;
+  overflow: hidden;
+  margin: 8px 0 4px;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  transition: width 0.3s ease;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: #e8f4ff;
+  color: #2163af;
+  font-weight: 700;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 12px;
+  gap: 12px;
+}
+
+.section-title h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px 16px;
+  margin-top: 12px;
+}
+
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: #2c3f56;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d7e4f5;
+  background: #f8fbff;
+  outline: none;
+  font-size: 14px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(24, 39, 56, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  width: min(520px, 100%);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.modal-card h3 {
+  margin: 0 0 12px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.toast {
+  padding: 12px 14px;
+  background: linear-gradient(90deg, #e0f3ff, #f0f8ff);
+  border-radius: 12px;
+  color: #20415f;
+  font-weight: 700;
+}
+
+.chart-placeholder {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  align-items: end;
+  gap: 6px;
+  height: 200px;
+  padding: 12px;
+  background: linear-gradient(135deg, #f4f9ff, #fdfdff);
+  border-radius: 16px;
+}
+
+.chart-placeholder span {
+  display: block;
+  background: linear-gradient(180deg, #5fb8ff, #7ad7ff);
+  border-radius: 10px 10px 4px 4px;
+}
+
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none;
+  }
+}
