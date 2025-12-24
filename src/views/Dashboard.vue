@@ -61,6 +61,7 @@ const openHelp = ref(false)
 
 const menus = [
   { path: '/dashboard/code', label: '双码标识管理' },
+  { path: '/dashboard/verify', label: '双码联动校验' },
   { path: '/dashboard/collect', label: '现场数据采集' },
   { path: '/dashboard/analysis', label: '数据统计分析' },
   { path: '/dashboard/system', label: '系统管理追溯' },

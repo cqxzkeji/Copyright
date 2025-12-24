@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
 import CodeManage from '../views/CodeManage.vue'
+import CodeVerify from '../views/CodeVerify.vue'
 import FieldCollect from '../views/FieldCollect.vue'
 import DataAnalysis from '../views/DataAnalysis.vue'
 import SystemManage from '../views/SystemManage.vue'
@@ -15,6 +16,7 @@ const routes = [
     children: [
       { path: '', redirect: '/dashboard/code' },
       { path: 'code', component: CodeManage },
+      { path: 'verify', component: CodeVerify },
       { path: 'collect', component: FieldCollect },
       { path: 'analysis', component: DataAnalysis },
       { path: 'system', component: SystemManage },
