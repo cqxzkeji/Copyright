@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Monitor, Clock, Histogram } from '@element-plus/icons-vue';
 import * as echarts from 'echarts';
@@ -64,6 +64,7 @@ const predictions = reactive(
 );
 
 const chartRef = ref();
+const chartInstance = ref();
 const showForecast = ref(false);
 const showProgress = ref(false);
 const progress = ref(10);
@@ -71,8 +72,11 @@ const forecastForm = reactive({ model: 'prophet', window: 21 });
 
 const renderChart = () => {
   if (!chartRef.value) return;
-  const chart = echarts.init(chartRef.value);
-  chart.setOption({
+  if (chartInstance.value) {
+    chartInstance.value.dispose();
+  }
+  chartInstance.value = echarts.init(chartRef.value);
+  chartInstance.value.setOption({
     tooltip: { trigger: 'axis' },
     grid: { left: 40, right: 20, top: 30, bottom: 40 },
     legend: { data: ['实际值', '预测值'] },
@@ -98,7 +102,24 @@ const renderChart = () => {
   });
 };
 
-onMounted(renderChart);
+const handleResize = () => {
+  chartInstance.value?.resize();
+};
+
+onMounted(() => {
+  nextTick(() => {
+    renderChart();
+    window.addEventListener('resize', handleResize);
+  });
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize);
+  if (chartInstance.value) {
+    chartInstance.value.dispose();
+    chartInstance.value = null;
+  }
+});
 
 const runCorrelation = () => {
   ElMessageBox.alert('自动计算特征相关度，已生成关联图谱并过滤弱相关噪声。', '关联分析', {
