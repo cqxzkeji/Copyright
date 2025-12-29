@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Refresh, Download, HelpFilled } from '@element-plus/icons-vue';
 import * as echarts from 'echarts';
@@ -63,13 +63,17 @@ const metrics = reactive(
 );
 
 const chartRef = ref();
+const chartInstance = ref();
 const showExport = ref(false);
 const exportForm = reactive({ format: 'png', range: '近7天' });
 
 const renderChart = () => {
   if (!chartRef.value) return;
-  const chart = echarts.init(chartRef.value);
-  chart.setOption({
+  if (chartInstance.value) {
+    chartInstance.value.dispose();
+  }
+  chartInstance.value = echarts.init(chartRef.value);
+  chartInstance.value.setOption({
     tooltip: { trigger: 'axis' },
     legend: { data: ['PV', 'UV', '留存'], top: 10 },
     grid: { left: 40, right: 20, top: 50, bottom: 40 },
@@ -83,7 +87,24 @@ const renderChart = () => {
   });
 };
 
-onMounted(renderChart);
+const handleResize = () => {
+  chartInstance.value?.resize();
+};
+
+onMounted(() => {
+  nextTick(() => {
+    renderChart();
+    window.addEventListener('resize', handleResize);
+  });
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize);
+  if (chartInstance.value) {
+    chartInstance.value.dispose();
+    chartInstance.value = null;
+  }
+});
 
 const refreshDashboard = () => {
   renderChart();
