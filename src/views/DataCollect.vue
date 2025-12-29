@@ -73,6 +73,7 @@
 
 <script setup>
 import { reactive, ref } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 const sources = reactive(
   Array.from({ length: 20 }, (_, i) => ({

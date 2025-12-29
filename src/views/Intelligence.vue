@@ -49,6 +49,7 @@
 
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import * as echarts from 'echarts';
 
 const predictions = reactive(
