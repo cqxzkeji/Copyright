@@ -1,0 +1,18 @@
+:root {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: #123055;
+  background-color: #f4f7fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+}
+
+button {
+  cursor: pointer;
+}
