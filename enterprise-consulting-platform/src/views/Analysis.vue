@@ -65,7 +65,9 @@
       </div>
     </section>
 
-    <Modal v-if="modal" :title="modalTitle" @close="modal = ''" @confirm="modal = ''">
+    <div v-if="toast" class="toast">{{ toast }}</div>
+
+    <Modal v-if="modal" :title="modalTitle" @close="modal = ''" @confirm="handleConfirm">
       <template v-if="modal === 'refresh'">
         <p class="subtitle">正在重新生成行业画像，预计 8 秒完成。</p>
         <div class="progress">
@@ -109,7 +111,7 @@ const portrait = ref([
   { industry: '交通', tag: '智慧出行', objective: '调度优化', budget: '120-160万', priority: '高', suggestion: '智能调度' }
 ]);
 
-const radarPoints = computed(() => [
+const radarBase = ref([
   { label: '数字化', score: 82 },
   { label: '融资需求', score: 71 },
   { label: '市场增长', score: 77 },
@@ -117,7 +119,7 @@ const radarPoints = computed(() => [
   { label: '人才与组织', score: 63 }
 ]);
 
-const topCities = computed(() => [
+const cityBase = ref([
   { name: '上海', hot: 96, count: 38 },
   { name: '深圳', hot: 90, count: 34 },
   { name: '北京', hot: 84, count: 31 },
@@ -127,11 +129,36 @@ const topCities = computed(() => [
   { name: '武汉', hot: 58, count: 17 }
 ]);
 
+const radarPoints = computed(() => radarBase.value);
+const topCities = computed(() => cityBase.value);
+
 const modal = ref('');
+const toast = ref('');
 const modalTitle = computed(() => (modal.value === 'export' ? '导出画像报告' : '生成画像'));
 
 const openModal = (type) => {
   modal.value = type;
+};
+
+const handleConfirm = () => {
+  if (modal.value === 'refresh') {
+    radarBase.value = radarBase.value.map((item) => ({
+      ...item,
+      score: Math.min(98, item.score + Math.round(Math.random() * 6 - 2))
+    }));
+    cityBase.value = cityBase.value.map((city) => ({
+      ...city,
+      hot: Math.min(100, city.hot + Math.round(Math.random() * 6 - 3)),
+      count: city.count + Math.max(1, Math.round(Math.random() * 3))
+    }));
+    toast.value = '画像已刷新，趋势指标同步更新。';
+  }
+
+  if (modal.value === 'export') {
+    toast.value = '画像报告已导出，包含行业、地区与预算敏感度。';
+  }
+
+  modal.value = '';
 };
 </script>
 
@@ -216,6 +243,16 @@ button {
   border: 1px solid #e7eef7;
   border-radius: 12px;
   overflow: hidden;
+}
+
+.toast {
+  margin-top: 10px;
+  background: #ebf8ff;
+  border: 1px solid #c7e7ff;
+  color: #0c567d;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 700;
 }
 
 .table-row {

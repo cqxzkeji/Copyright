@@ -70,6 +70,8 @@
       </div>
     </section>
 
+    <div v-if="toast" class="toast">{{ toast }}</div>
+
     <Modal v-if="modal.type" :title="modalTitle" @close="closeModal" @confirm="confirmModal">
       <template v-if="modal.type === 'add'">
         <p class="subtitle">填写企业基础信息以便快速建档。</p>
@@ -134,9 +136,15 @@ const enterprises = reactive([
 
 const modal = reactive({ type: '' });
 const form = reactive({ name: '', industry: '', city: '', contact: '', demand: '', channel: '', requirement: '' });
-const pending = 7;
-const highPriority = 5;
-const weeklyAdded = 12;
+const toast = ref('');
+const pending = ref(7);
+const highPriority = ref(5);
+const weeklyAdded = ref(12);
+const importSamples = [
+  { name: '创恒数科', industry: 'SaaS', city: '南京', contact: '韩萧', demand: '产品共创', channel: '批量导入' },
+  { name: '弘瑞装备', industry: '智能制造', city: '佛山', contact: '杜程', demand: '产线升级', channel: '批量导入' },
+  { name: '云岭生物', industry: '医疗', city: '昆明', contact: '章瑶', demand: '注册合规', channel: '批量导入' }
+];
 
 const industryStats = computed(() => {
   const summary = {};
@@ -177,6 +185,23 @@ const closeModal = () => {
 const confirmModal = () => {
   if (modal.type === 'add' && form.name) {
     enterprises.unshift({ ...form });
+    toast.value = `已新增企业「${form.name}」，进入审核队列。`;
+    Object.keys(form).forEach((k) => (form[k] = ''));
+    pending.value += 1;
+    weeklyAdded.value += 1;
+  }
+  if (modal.type === 'import') {
+    importSamples.forEach((item) => enterprises.unshift({ ...item }));
+    toast.value = `批量导入完成，新增 ${importSamples.length} 条记录。`;
+    pending.value += importSamples.length;
+  }
+  if (modal.type === 'support' && form.requirement) {
+    toast.value = `已登记咨询需求，并同步给相关顾问：${form.requirement.slice(0, 20)}...`;
+    form.requirement = '';
+    highPriority.value += 1;
+  }
+  if (modal.type === 'remind') {
+    toast.value = '已向审核组发送催办提醒，预计 30 分钟内响应。';
   }
   closeModal();
 };
@@ -363,6 +388,15 @@ textarea {
 .progress-bar {
   height: 100%;
   background: linear-gradient(120deg, #3bb2ff, #7fe0ff);
+}
+
+.toast {
+  background: #e9f7ff;
+  border: 1px solid #b9e5ff;
+  color: #0c567d;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 700;
 }
 
 @media (max-width: 960px) {

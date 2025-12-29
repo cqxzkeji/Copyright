@@ -46,6 +46,12 @@
         <div class="pill-group">
           <span class="chip" v-for="pool in resourcePools" :key="pool">{{ pool }}</span>
         </div>
+        <div v-if="poolDetails" class="pool-detail">
+          <p class="muted">可用专家与项目：</p>
+          <ul>
+            <li v-for="line in poolHighlights" :key="line">{{ line }}</li>
+          </ul>
+        </div>
         <button class="ghost" @click="openModal('pool')">查看资源明细</button>
       </div>
       <div class="card">
@@ -61,6 +67,8 @@
         </div>
       </div>
     </section>
+
+    <div v-if="status" class="toast">{{ status }}</div>
 
     <Modal v-if="modal.type" :title="modalTitle" @close="closeModal" @confirm="confirmModal">
       <template v-if="modal.type === 'smart'">
@@ -118,6 +126,7 @@ const matches = reactive([
 ]);
 
 const resourcePools = ['数字化顾问', '投研顾问', '财税专家', '精益顾问', '安全合规', '组织人才', '项目资源'];
+const poolHighlights = ['数字化顾问（12 位）', '投研顾问（9 位）', '在研项目：产线数智化 x3', '在研项目：投研对接 x2'];
 
 const trend = computed(() => [
   { label: '匹配成功率', value: 86 },
@@ -128,6 +137,8 @@ const trend = computed(() => [
 
 const modal = reactive({ type: '', payload: null });
 const form = reactive({ expert: '', time: '' });
+const poolDetails = ref(false);
+const status = ref('');
 
 const modalTitle = computed(() => {
   switch (modal.type) {
@@ -149,6 +160,7 @@ const openModal = (type, payload = null) => {
   modal.payload = payload;
   if (type === 'assign' && payload) {
     form.expert = payload.expert;
+    form.time = payload.slot;
   }
 };
 
@@ -158,6 +170,24 @@ const closeModal = () => {
 };
 
 const confirmModal = () => {
+  if (modal.type === 'smart') {
+    matches.unshift({ company: '新提交需求', need: '智能匹配', expert: '系统推荐', score: 90, slot: '可当周' });
+    status.value = '已生成最新智能推荐，匹配列表已更新。';
+  }
+  if (modal.type === 'reserve') {
+    status.value = '已锁定当前匹配资源并同步给对接人。';
+  }
+  if (modal.type === 'assign' && modal.payload) {
+    modal.payload.expert = form.expert || modal.payload.expert;
+    modal.payload.slot = form.time || modal.payload.slot;
+    status.value = `已指派 ${modal.payload.expert} 对接 ${modal.payload.company}，时间：${modal.payload.slot}`;
+    form.expert = '';
+    form.time = '';
+  }
+  if (modal.type === 'pool') {
+    poolDetails.value = true;
+    status.value = '资源池详情已展开，可筛选可用专家与项目。';
+  }
   closeModal();
 };
 </script>
@@ -297,6 +327,31 @@ button.ghost {
 .progress-bar {
   height: 100%;
   background: linear-gradient(120deg, #3bb2ff, #7fe0ff);
+}
+
+.pool-detail {
+  margin: 10px 0;
+  background: #f6fbff;
+  border: 1px solid #d7e6f4;
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: #1e5084;
+}
+
+.pool-detail ul {
+  margin: 6px 0 0 18px;
+  padding: 0;
+  color: #0c3c62;
+}
+
+.toast {
+  margin-top: 10px;
+  background: #ebf8ff;
+  border: 1px solid #c7e7ff;
+  color: #0c567d;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 700;
 }
 
 .check {

@@ -59,6 +59,8 @@
       </div>
     </section>
 
+    <div v-if="toast" class="toast">{{ toast }}</div>
+
     <Modal v-if="modal.type" :title="modalTitle" @close="closeModal" @confirm="confirmModal">
       <template v-if="modal.type === 'role'">
         <p class="subtitle">为成员分配角色与权限。</p>
@@ -89,7 +91,7 @@
 </template>
 
 <script setup>
-import { computed, reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import Modal from '../components/Modal.vue';
 
 const roles = reactive([
@@ -124,6 +126,7 @@ const monthly = reactive([
 
 const modal = reactive({ type: '' });
 const form = reactive({ name: '', role: '', notice: '' });
+const toast = ref('');
 
 const modalTitle = computed(() => {
   switch (modal.type) {
@@ -144,6 +147,13 @@ const modalTitle = computed(() => {
 
 const openModal = (type) => {
   modal.type = type;
+  if (type === 'role') {
+    form.name = '';
+    form.role = '';
+  }
+  if (type === 'notice') {
+    form.notice = '';
+  }
 };
 
 const closeModal = () => {
@@ -151,6 +161,26 @@ const closeModal = () => {
 };
 
 const confirmModal = () => {
+  if (modal.type === 'role' && form.name && form.role) {
+    roles.unshift({ name: form.name, role: form.role, team: '待分配', scope: '自定义', login: '刚刚', status: '在线' });
+    toast.value = `已新增角色：${form.name}（${form.role}）`;
+  }
+  if (modal.type === 'report') {
+    toast.value = '系统报表已导出并发送至管理员邮箱。';
+  }
+  if (modal.type === 'clean') {
+    toast.value = '缓存已清理并完成索引重建。';
+  }
+  if (modal.type === 'backup') {
+    toast.value = '备份任务执行完毕，已同步到对象存储。';
+  }
+  if (modal.type === 'notice' && form.notice) {
+    toast.value = `公告已发布：${form.notice.slice(0, 18)}...`;
+    const noticeStat = monthly.find((item) => item.label === '发布公告');
+    if (noticeStat) {
+      noticeStat.value += 1;
+    }
+  }
   closeModal();
 };
 </script>
@@ -292,6 +322,16 @@ textarea {
   border: 1px solid #d8e5f3;
   padding: 10px;
   background: #f8fbff;
+}
+
+.toast {
+  margin-top: 10px;
+  background: #ebf8ff;
+  border: 1px solid #c7e7ff;
+  color: #0c567d;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 700;
 }
 
 @media (max-width: 960px) {

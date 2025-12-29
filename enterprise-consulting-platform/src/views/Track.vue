@@ -66,6 +66,8 @@
       </div>
     </section>
 
+    <div v-if="status" class="toast">{{ status }}</div>
+
     <Modal v-if="modal.type" :title="modalTitle" @close="closeModal" @confirm="confirmModal">
       <template v-if="modal.type === 'record'">
         <p class="subtitle">记录本次跟进动作。</p>
@@ -94,7 +96,7 @@
 </template>
 
 <script setup>
-import { computed, reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import Modal from '../components/Modal.vue';
 
 const progresses = reactive([
@@ -126,15 +128,18 @@ const risks = reactive([
   { title: '预算偏低', desc: '预算与预期交付不匹配，需要分阶段推进' }
 ]);
 
-const burnDown = computed(() => [
+const burnStages = ref([
   { label: '方案确认', value: 78 },
   { label: '合同签署', value: 62 },
   { label: '执行落地', value: 48 },
   { label: '效果评估', value: 36 }
 ]);
 
+const burnDown = computed(() => burnStages.value);
+
 const modal = reactive({ type: '', payload: null });
 const form = reactive({ company: '', action: '', mitigation: '' });
+const status = ref('');
 
 const modalTitle = computed(() => {
   switch (modal.type) {
@@ -154,6 +159,9 @@ const modalTitle = computed(() => {
 const openModal = (type, payload = null) => {
   modal.type = type;
   modal.payload = payload;
+  if (type === 'mitigate') {
+    form.mitigation = '';
+  }
 };
 
 const closeModal = () => {
@@ -162,6 +170,27 @@ const closeModal = () => {
 };
 
 const confirmModal = () => {
+  if (modal.type === 'record' && form.company && form.action) {
+    progresses.unshift({ company: form.company, stage: '新增记录', owner: '系统', action: form.action, rate: 40, next: '安排沟通' });
+    status.value = `已记录 ${form.company}：${form.action}`;
+    form.company = '';
+    form.action = '';
+  }
+  if (modal.type === 'feedback') {
+    status.value = '反馈表已发送，自动跟踪回收进度。';
+  }
+  if (modal.type === 'score') {
+    burnStages.value = burnStages.value.map((item, idx) => ({
+      ...item,
+      value: idx === burnStages.value.length - 1 ? Math.min(100, item.value + 12) : item.value
+    }));
+    status.value = '评估报告已生成，效果评估进度提升。';
+  }
+  if (modal.type === 'mitigate' && modal.payload) {
+    modal.payload.desc = form.mitigation || modal.payload.desc;
+    status.value = `已登记「${modal.payload.title}」的处理措施。`;
+    form.mitigation = '';
+  }
   closeModal();
 };
 </script>
@@ -333,6 +362,16 @@ textarea {
   border: 1px solid #d8e5f3;
   padding: 10px;
   background: #f8fbff;
+}
+
+.toast {
+  margin-top: 10px;
+  background: #ebf8ff;
+  border: 1px solid #c7e7ff;
+  color: #0c567d;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 700;
 }
 
 @media (max-width: 960px) {
