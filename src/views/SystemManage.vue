@@ -69,6 +69,7 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { User, Key, BellFilled, Cpu, TrendCharts } from '@element-plus/icons-vue';
 import * as echarts from 'echarts';
 
 const users = reactive(

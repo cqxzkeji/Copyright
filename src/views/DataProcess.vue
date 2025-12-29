@@ -75,6 +75,7 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { RefreshRight, Timer, View } from '@element-plus/icons-vue';
 import * as echarts from 'echarts';
 
 const qualityRows = reactive(

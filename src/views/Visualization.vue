@@ -49,6 +49,7 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { Refresh, Download, HelpFilled } from '@element-plus/icons-vue';
 import * as echarts from 'echarts';
 
 const metrics = reactive(

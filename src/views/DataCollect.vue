@@ -74,6 +74,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { CirclePlus, VideoPlay, Bell } from '@element-plus/icons-vue';
 
 const sources = reactive(
   Array.from({ length: 20 }, (_, i) => ({

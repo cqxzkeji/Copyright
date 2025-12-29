@@ -27,6 +27,7 @@
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import { DataAnalysis } from '@element-plus/icons-vue';
 
 const router = useRouter();
 const form = reactive({ username: '', password: '' });

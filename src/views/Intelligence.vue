@@ -50,6 +50,7 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { Monitor, Clock, Histogram } from '@element-plus/icons-vue';
 import * as echarts from 'echarts';
 
 const predictions = reactive(
