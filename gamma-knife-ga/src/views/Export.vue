@@ -58,7 +58,7 @@
         <div class="grid">
           <label>
             <span>导出格式</span>
-            <select>
+            <select v-model="form.type">
               <option>DICOM-RT</option>
               <option>PDF 报告</option>
               <option>Excel 摘要</option>
@@ -66,11 +66,11 @@
           </label>
           <label>
             <span>签名医生</span>
-            <input placeholder="输入签名" />
+            <input v-model="form.doctor" placeholder="输入签名" />
           </label>
           <label>
             <span>推送目标</span>
-            <input placeholder="PACS / HIS" />
+            <input v-model="form.target" placeholder="PACS / HIS" />
           </label>
           <div>
             <p style="margin:0 0 6px">导出进度</p>
@@ -82,6 +82,7 @@
       </template>
       <template #footer>
         <button @click="progress=Math.min(100, progress+20)">推进</button>
+        <button @click="exportPlan">执行</button>
         <button @click="modal=null" style="background:#90a4ae">关闭</button>
       </template>
     </Modal>
@@ -89,7 +90,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 
 const Modal = {
   props: ['title'],
@@ -120,10 +121,28 @@ const archive = ref([
 ])
 const modal = ref(null)
 const progress = ref(25)
+const form = reactive({ type: 'DICOM-RT', doctor: '李主任', target: 'PACS' })
 const titleMap = { export: '导出计划', report: '生成报告', archive: '归档操作' }
 
 function openModal(type) {
   modal.value = type
   progress.value = 25
+  form.type = 'DICOM-RT'
+  form.doctor = '李主任'
+  form.target = 'PACS'
+}
+
+function exportPlan() {
+  const name = `${form.target || 'PACS'}-${form.type}`
+  recent.value.unshift({ name: `${form.type} 导出`, time: new Date().toISOString().slice(0, 16).replace('T', ' ') })
+  archive.value.unshift({
+    name: `${name}.${form.type.includes('PDF') ? 'pdf' : form.type.includes('Excel') ? 'xlsx' : 'dcm'}`,
+    type: form.type.replace(' 摘要', ''),
+    time: new Date().toISOString().slice(0, 10),
+    status: '已存档',
+    note: `${form.doctor} 已签名，推送到 ${form.target}`
+  })
+  progress.value = 100
+  modal.value = null
 }
 </script>

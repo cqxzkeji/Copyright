@@ -48,25 +48,41 @@
       </div>
     </div>
 
-    <Modal v-if="modal" :title="modalTitle" @close="modal=null">
+    <Modal v-if="modal" :title="modalTitle" @close="closeModal">
       <template #body>
         <div class="grid">
           <label>
             <span>姓名</span>
-            <input placeholder="输入姓名" />
+            <input v-model="form.name" placeholder="输入姓名" />
           </label>
           <label>
             <span>部位</span>
-            <select>
-              <option>颅底</option>
-              <option>丘脑</option>
-              <option>小脑</option>
-              <option>颞叶</option>
+            <select v-model="form.site">
+              <option value="颅底">颅底</option>
+              <option value="丘脑">丘脑</option>
+              <option value="小脑">小脑</option>
+              <option value="颞叶">颞叶</option>
+              <option value="额叶">额叶</option>
+              <option value="枕叶">枕叶</option>
             </select>
           </label>
           <label>
             <span>影像备注</span>
-            <textarea rows="3" placeholder="扫描方案、序列、注意事项"></textarea>
+            <textarea v-model="form.note" rows="3" placeholder="扫描方案、序列、注意事项"></textarea>
+          </label>
+          <label v-if="modal==='import'">
+            <span>选择患者</span>
+            <select v-model="form.targetId">
+              <option v-for="p in patients" :key="p.id" :value="p.id">{{ p.id }} - {{ p.name }}</option>
+            </select>
+          </label>
+          <label v-if="modal==='preprocess'">
+            <span>处理工具</span>
+            <select v-model="form.tool">
+              <option value="金属伪影校正">金属伪影校正</option>
+              <option value="噪声抑制">噪声抑制</option>
+              <option value="非刚性配准">非刚性配准</option>
+            </select>
           </label>
           <div>
             <p style="margin:0 0 6px">处理进度</p>
@@ -78,14 +94,15 @@
       </template>
       <template #footer>
         <button @click="stepProgress">推进进度</button>
-        <button @click="modal=null" style="background:#90a4ae">关闭</button>
+        <button @click="submitModal">保存</button>
+        <button @click="closeModal" style="background:#90a4ae">关闭</button>
       </template>
     </Modal>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 const Modal = {
   props: ['title'],
@@ -127,6 +144,7 @@ const patients = ref([
 
 const modal = ref(null)
 const progress = ref(35)
+const form = reactive({ name: '', site: '丘脑', note: '', targetId: 'G001', tool: '金属伪影校正' })
 const modalTitle = computed(() => {
   if (modal.value === 'add') return '新增患者表单'
   if (modal.value === 'import') return '影像导入设置'
@@ -137,9 +155,49 @@ const modalTitle = computed(() => {
 function openModal(type) {
   modal.value = type
   progress.value = 35
+  form.name = ''
+  form.note = ''
+  form.site = '丘脑'
+  form.targetId = patients.value[0]?.id || ''
+  form.tool = '金属伪影校正'
 }
 
 function stepProgress() {
   progress.value = Math.min(100, progress.value + 15)
+}
+
+function submitModal() {
+  if (modal.value === 'add') {
+    const id = `G${String(patients.value.length + 1).padStart(3, '0')}`
+    patients.value.unshift({
+      id,
+      name: form.name || `未命名-${id}`,
+      site: form.site,
+      seg: '待审核',
+      date: new Date().toISOString().slice(0, 10),
+      note: form.note || '新建患者'
+    })
+  }
+  if (modal.value === 'import' && form.targetId) {
+    const target = patients.value.find(p => p.id === form.targetId)
+    if (target) {
+      target.note = `${target.note}｜导入序列: ${form.note || '默认方案'}`
+      target.seg = '进行中'
+      progress.value = Math.min(100, progress.value + 25)
+    }
+  }
+  if (modal.value === 'preprocess' && form.targetId) {
+    const target = patients.value.find(p => p.id === form.targetId)
+    if (target) {
+      target.note = `${target.note}｜${form.tool}完成`
+      target.seg = '已完成'
+      progress.value = 100
+    }
+  }
+  closeModal()
+}
+
+function closeModal() {
+  modal.value = null
 }
 </script>

@@ -40,6 +40,10 @@
           <strong>边界光滑度</strong>
           <span>{{ metrics.smoothness }} %</span>
         </div>
+        <div class="flex-between">
+          <strong>叠加序列</strong>
+          <span>{{ overlayLabel }}</span>
+        </div>
         <div style="background:#e3f2fd; border-radius:10px; padding:12px;">
           <p style="margin:0 0 6px; font-weight:700; color:#0d47a1;">当前轮廓</p>
           <p style="margin:0; color:#5f6a7a;">已完成 3 层轮廓；可切换 MRI/CT 对齐状态并导出 DICOM-RT。</p>
@@ -78,19 +82,23 @@
         <div class="grid">
           <label>
             <span>层厚 / mm</span>
-            <input type="number" min="0.5" step="0.5" value="1" />
+            <input v-model.number="form.thickness" type="number" min="0.5" step="0.5" />
           </label>
           <label>
             <span>重建方式</span>
-            <select>
-              <option>等体素重采样</option>
-              <option>基于分水岭</option>
-              <option>区域增长</option>
+            <select v-model="form.method">
+              <option value="等体素重采样">等体素重采样</option>
+              <option value="基于分水岭">基于分水岭</option>
+              <option value="区域增长">区域增长</option>
             </select>
           </label>
           <label>
             <span>叠加序列</span>
-            <input placeholder="例如 T1+C / CTA" />
+            <input v-model="form.overlay" placeholder="例如 T1+C / CTA" />
+          </label>
+          <label>
+            <span>版本标签</span>
+            <input v-model="form.tag" placeholder="平滑/扩展等" />
           </label>
           <div>
             <p style="margin:0 0 6px">计算进度</p>
@@ -102,6 +110,7 @@
       </template>
       <template #footer>
         <button @click="progress=Math.min(100, progress+20)">推进</button>
+        <button @click="applyAction">保存更新</button>
         <button @click="modal=null" style="background:#90a4ae">关闭</button>
       </template>
     </Modal>
@@ -109,7 +118,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 
 const Modal = {
   props: ['title'],
@@ -127,6 +136,7 @@ const Modal = {
 }
 
 const metrics = ref({ volume: 4.6, dose: 15.2, smoothness: 92 })
+const overlayLabel = ref('MRI+CT')
 const contours = ref([
   { version: 'v1.0', doctor: '李主任', time: '2024-03-12 09:18', tag: '初版' },
   { version: 'v1.1', doctor: '张医生', time: '2024-03-13 10:40', tag: '平滑更新' },
@@ -134,6 +144,7 @@ const contours = ref([
 ])
 const modal = ref(null)
 const progress = ref(45)
+const form = reactive({ thickness: 1, method: '等体素重采样', overlay: 'T1+C', tag: '新版本' })
 const titleMap = {
   draw: '靶区勾画',
   contour: '轮廓管理',
@@ -144,5 +155,38 @@ const titleMap = {
 function openModal(type) {
   modal.value = type
   progress.value = 45
+  form.thickness = 1
+  form.method = '等体素重采样'
+  form.overlay = 'T1+C'
+  form.tag = '新版本'
+}
+
+function applyAction() {
+  if (modal.value === 'draw') {
+    metrics.value = {
+      volume: +(metrics.value.volume + form.thickness * 0.1).toFixed(1),
+      dose: +(metrics.value.dose + 0.3).toFixed(1),
+      smoothness: Math.min(100, metrics.value.smoothness + 2)
+    }
+    progress.value = 100
+  }
+  if (modal.value === 'contour') {
+    const version = `v1.${contours.value.length}`
+    contours.value.push({
+      version,
+      doctor: '系统生成',
+      time: new Date().toISOString().slice(0, 16).replace('T', ' '),
+      tag: form.tag || '更新'
+    })
+    progress.value = Math.min(100, progress.value + 30)
+  }
+  if (modal.value === 'overlay') {
+    overlayLabel.value = form.overlay || 'MRI+CT'
+    progress.value = Math.min(100, progress.value + 20)
+  }
+  if (modal.value === 'review') {
+    progress.value = 100
+  }
+  modal.value = null
 }
 </script>

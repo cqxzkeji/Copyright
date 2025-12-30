@@ -70,6 +70,14 @@
               <option>旁观器剂量约束</option>
             </select>
           </label>
+          <label>
+            <span>目标方案名</span>
+            <input v-model="form.planName" placeholder="例如 GA-05" />
+          </label>
+          <label>
+            <span>备注</span>
+            <input v-model="form.note" placeholder="热点抑制 / 剂量平衡" />
+          </label>
           <div>
             <p style="margin:0 0 6px">进度</p>
             <div style="background:#e6f2ff; border-radius:10px; height:14px; overflow:hidden;">
@@ -80,6 +88,7 @@
       </template>
       <template #footer>
         <button @click="progress=Math.min(100, progress+25)">推进</button>
+        <button @click="applyAction">执行</button>
         <button @click="modal=null" style="background:#90a4ae">关闭</button>
       </template>
     </Modal>
@@ -87,7 +96,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 
 const Modal = {
   props: ['title'],
@@ -120,6 +129,7 @@ const plans = ref([
 ])
 const modal = ref(null)
 const progress = ref(35)
+const form = reactive({ planName: 'GA-05', note: '新一代方案' })
 const titleMap = {
   start: '生成方案',
   mutate: '参数调节',
@@ -129,5 +139,34 @@ const titleMap = {
 function openModal(type) {
   modal.value = type
   progress.value = 35
+  form.planName = `GA-0${plans.value.length + 1}`
+  form.note = '新一代方案'
+}
+
+function applyAction() {
+  if (modal.value === 'start') {
+    const score = Math.min(100, fitness.value[fitness.value.length - 1].score + 5)
+    fitness.value.push({ generation: fitness.value.length * 2 + 2, score })
+    plans.value.unshift({
+      name: form.planName || `GA-${plans.value.length + 1}`,
+      coverage: +(95 + params.value.coverage * 5).toFixed(1),
+      hot: +(16 + params.value.mutation * 0.05).toFixed(1),
+      oar: +(5.5 + (1 - params.value.coverage) * 2).toFixed(1),
+      note: form.note || '自动生成'
+    })
+    progress.value = 100
+  }
+  if (modal.value === 'mutate') {
+    params.value.coverage = Math.min(1, +(params.value.coverage + 0.05).toFixed(2))
+    params.value.mutation = Math.max(1, params.value.mutation - 2)
+    progress.value = Math.min(100, progress.value + 20)
+  }
+  if (modal.value === 'analyze') {
+    plans.value = plans.value
+      .map(p => ({ ...p, coverage: +(p.coverage + Math.random()).toFixed(1) }))
+      .sort((a, b) => b.coverage - a.coverage)
+    progress.value = 100
+  }
+  modal.value = null
 }
 </script>

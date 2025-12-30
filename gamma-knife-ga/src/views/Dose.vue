@@ -54,7 +54,7 @@
         <div class="grid">
           <label>
             <span>评估方案</span>
-            <select>
+            <select v-model="form.plan">
               <option>GA-01</option>
               <option>GA-02</option>
               <option>GA-03</option>
@@ -62,11 +62,11 @@
           </label>
           <label>
             <span>剂量网格</span>
-            <input placeholder="1mm / 2mm" />
+            <input v-model="form.grid" placeholder="1mm / 2mm" />
           </label>
           <label>
             <span>比较基准</span>
-            <input placeholder="等剂量面 / 梯度" />
+            <input v-model="form.baseline" placeholder="等剂量面 / 梯度" />
           </label>
           <div>
             <p style="margin:0 0 6px">任务进度</p>
@@ -78,6 +78,7 @@
       </template>
       <template #footer>
         <button @click="progress=Math.min(100, progress+20)">推进</button>
+        <button @click="recalcDose">执行</button>
         <button @click="modal=null" style="background:#90a4ae">关闭</button>
       </template>
     </Modal>
@@ -85,7 +86,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 
 const Modal = {
   props: ['title'],
@@ -128,6 +129,7 @@ const table = ref([
 ])
 const modal = ref(null)
 const progress = ref(30)
+const form = reactive({ plan: 'GA-01', grid: '1mm', baseline: '等剂量面' })
 const titleMap = { calc: '剂量计算', compare: '方案对比', dvh: 'DVH 查看' }
 
 function pt(arr) {
@@ -137,5 +139,27 @@ function pt(arr) {
 function openModal(type) {
   modal.value = type
   progress.value = 30
+  form.plan = 'GA-01'
+  form.grid = '1mm'
+  form.baseline = '等剂量面'
+}
+
+function recalcDose() {
+  const delta = form.plan === 'GA-02' ? 0.8 : form.plan === 'GA-03' ? -0.5 : 0
+  stats.value = {
+    d95: +(14.5 + delta).toFixed(1),
+    coverage: +(98.4 + delta * 0.6).toFixed(1),
+    oar: form.baseline.includes('梯度') ? '关注梯度' : '全部满足'
+  }
+  targetCurve.value = targetCurve.value.map(([x, y]) => [x, Math.min(100, y + delta * 2)])
+  oarCurve.value = oarCurve.value.map(([x, y]) => [x, Math.min(100, y + delta)])
+  table.value = table.value.map(item => ({
+    ...item,
+    mean: +(item.mean + delta * 0.2).toFixed(1),
+    max: +(item.max + delta * 0.3).toFixed(1),
+    note: form.grid.includes('2') ? `${item.note}｜粗网格` : `${item.note}｜细网格`
+  }))
+  progress.value = 100
+  modal.value = null
 }
 </script>
