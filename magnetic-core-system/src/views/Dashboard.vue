@@ -97,6 +97,7 @@ const menus = [
   { label: '工艺数据采集', path: '/home/data', icon: '📡' },
   { label: '过程监控与预警', path: '/home/process', icon: '⏱️' },
   { label: '质量检测分析', path: '/home/quality', icon: '🧪' },
+  { label: '统计分析与优化', path: '/home/stats', icon: '📊' },
   { label: '系统管理与服务', path: '/home/system', icon: '🛠️' }
 ]
 
