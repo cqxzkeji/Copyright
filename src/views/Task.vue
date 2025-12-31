@@ -89,6 +89,17 @@
       <button style="margin-top: 10px" @click="flow = null">关闭</button>
     </div>
   </div>
+
+  <div v-if="statusModal.open" class="modal-overlay" @click.self="statusModal.open = false">
+    <div class="modal">
+      <h3>{{ statusModal.title }}</h3>
+      <p>{{ statusModal.message }}</p>
+      <div class="flex-between" style="margin-top: 12px">
+        <span class="tag">任务管理</span>
+        <button @click="statusModal.open = false">确认</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -107,6 +118,7 @@ const scheduleTask = ref('A-楼宇巡检');
 const scheduleWindow = ref('10:00-12:00');
 const strategy = reactive({ obstacle: '中', power: '平衡', feet: '软着地' });
 const flow = ref(null);
+const statusModal = reactive({ open: false, title: '', message: '' });
 
 const openNew = ref(false);
 const openSchedule = ref(false);
@@ -118,12 +130,16 @@ const createTask = () => {
 };
 
 const startSchedule = () => {
-  alert(`${scheduleTask.value} 已安排在 ${scheduleWindow.value}`);
+  statusModal.title = '任务已排程';
+  statusModal.message = `${scheduleTask.value} 已安排在 ${scheduleWindow.value}`;
+  statusModal.open = true;
   openSchedule.value = false;
 };
 
 const saveStrategy = () => {
-  alert('策略已保存');
+  statusModal.title = '策略已保存';
+  statusModal.message = `${strategy.obstacle} 避障 / ${strategy.power} 模式 / ${strategy.feet} 已写入。`;
+  statusModal.open = true;
   openStrategy.value = false;
 };
 

@@ -118,6 +118,17 @@
       <button style="margin-top: 10px" @click="openReproject = false">关闭</button>
     </div>
   </div>
+
+  <div v-if="feedback.open" class="modal-overlay" @click.self="feedback.open = false">
+    <div class="modal">
+      <h3>{{ feedback.title }}</h3>
+      <p>{{ feedback.message }}</p>
+      <div class="flex-between" style="margin-top: 12px">
+        <span class="tag">操作完成</span>
+        <button @click="feedback.open = false">确认</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -145,6 +156,7 @@ const cameraForm = reactive({ ip: '192.168.1.50', res: '1920x1080', fps: 30 });
 const calibForm = reactive({ grid: '0.025m', count: 12 });
 const overlayForm = reactive({ base: '机身中心', precision: '2mm' });
 const captureProgress = ref(0);
+const feedback = reactive({ open: false, title: '', message: '' });
 
 const openCamera = ref(false);
 const openCalib = ref(false);
@@ -163,12 +175,17 @@ const applyCalib = () => {
 };
 
 const applyOverlay = () => {
-  alert(`对齐到 ${overlayForm.base}，精度 ${overlayForm.precision}`);
+  feedback.title = '坐标转换完成';
+  feedback.message = `已对齐到 ${overlayForm.base}，精度 ${overlayForm.precision}`;
+  feedback.open = true;
   openOverlay.value = false;
 };
 
 const runCapture = () => {
   captureProgress.value = 100;
+  feedback.title = '截图检测完成';
+  feedback.message = '目标检测已完成并记录至相册。';
+  feedback.open = true;
 };
 </script>
 

@@ -97,6 +97,17 @@
       <button style="margin-top: 10px" @click="saveConfig">保存</button>
     </div>
   </div>
+
+  <div v-if="statusModal.open" class="modal-overlay" @click.self="statusModal.open = false">
+    <div class="modal">
+      <h3>{{ statusModal.title }}</h3>
+      <p>{{ statusModal.message }}</p>
+      <div class="flex-between" style="margin-top: 12px">
+        <span class="tag">数据分析</span>
+        <button @click="statusModal.open = false">确认</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -120,28 +131,37 @@ const openReplay = ref(false);
 const openExport = ref(false);
 const openTrim = ref(false);
 const openConfig = ref(false);
+const statusModal = reactive({ open: false, title: '', message: '' });
 
 const replay = reactive({ start: '10:00', end: '10:10' });
 const exportForm = reactive({ format: 'CSV', range: '最近 10 分钟' });
 const trimWindow = ref('20s');
 
 const startReplay = () => {
-  alert(`回放 ${replay.start} - ${replay.end}`);
+  statusModal.title = '回放准备就绪';
+  statusModal.message = `时间窗 ${replay.start} - ${replay.end} 已加载。`;
+  statusModal.open = true;
   openReplay.value = false;
 };
 
 const exportData = () => {
-  alert(`导出 ${exportForm.format}，范围 ${exportForm.range}`);
+  statusModal.title = '导出完成';
+  statusModal.message = `${exportForm.format} 已导出，范围 ${exportForm.range}`;
+  statusModal.open = true;
   openExport.value = false;
 };
 
 const applyTrim = () => {
-  alert(`已应用 ${trimWindow.value} 窗口`);
+  statusModal.title = '裁剪已应用';
+  statusModal.message = `窗口 ${trimWindow.value} 已应用到当前曲线。`;
+  statusModal.open = true;
   openTrim.value = false;
 };
 
 const saveConfig = () => {
-  alert(`备份 ${storage.backup}，阈值 ${storage.threshold}%`);
+  statusModal.title = '系统配置已保存';
+  statusModal.message = `备份：${storage.backup}，阈值：${storage.threshold}%`;
+  statusModal.open = true;
   openConfig.value = false;
 };
 </script>

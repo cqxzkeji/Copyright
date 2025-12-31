@@ -9,6 +9,13 @@
           <button @click="openPose = true">姿态调整</button>
         </div>
       </div>
+      <div class="video-box">
+        <video class="video-player" controls autoplay loop muted playsinline>
+          <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+          浏览器不支持视频播放。
+        </video>
+        <div class="video-caption">视觉伺服回传 | 流水线检测场景</div>
+      </div>
       <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 12px;">
         <div class="card">
           <p class="badge">视觉误差</p>
@@ -133,3 +140,28 @@ const doStop = () => {
   openStop.value = false;
 };
 </script>
+
+<style scoped>
+.video-box {
+  margin-top: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #f9fbff;
+}
+
+.video-player {
+  width: 100%;
+  height: 260px;
+  display: block;
+  object-fit: cover;
+  background: #000;
+}
+
+.video-caption {
+  padding: 8px 12px;
+  font-weight: 600;
+  color: #0b3a75;
+  background: linear-gradient(90deg, #e3f2fd, #fdf7e3);
+}
+</style>

@@ -153,6 +153,17 @@
       <button @click="detailDevice = null">关闭</button>
     </div>
   </div>
+
+  <div v-if="statusModal.open" class="modal-overlay" @click.self="statusModal.open = false">
+    <div class="modal">
+      <h3>{{ statusModal.title }}</h3>
+      <p>{{ statusModal.message }}</p>
+      <div class="flex-between" style="margin-top: 12px">
+        <span class="tag">设备接入</span>
+        <button @click="statusModal.open = false">确认</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -183,6 +194,7 @@ const updateProgress = ref(0);
 const linkHealth = ref(92);
 const calibrateTarget = ref('立体相机');
 const detailDevice = ref(null);
+const statusModal = reactive({ open: false, title: '', message: '' });
 
 const openAdd = ref(false);
 const openNetwork = ref(false);
@@ -203,7 +215,9 @@ const addDevice = () => {
 };
 
 const saveNetwork = () => {
-  alert(`已保存网络：${network.master} / ${network.port}`);
+  statusModal.title = '网络参数已保存';
+  statusModal.message = `${network.master}:${network.port} 已写入并下发设备。`;
+  statusModal.open = true;
   openNetwork.value = false;
 };
 
@@ -216,7 +230,9 @@ const simulateUpdate = () => {
 };
 
 const doCalibrate = () => {
-  alert(`${calibrateTarget.value} 校准完成`);
+  statusModal.title = '校准完成';
+  statusModal.message = `${calibrateTarget.value} 校准完成并同步到控制器。`;
+  statusModal.open = true;
   openCalibrate.value = false;
 };
 
