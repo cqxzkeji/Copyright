@@ -4,8 +4,8 @@
       <h3>港口资源与基础资料</h3>
       <div class="tag-row">
         <button class="btn" @click="showForm = true">新增资源</button>
-        <button class="btn secondary" @click="showProgress = true">导入泊位计划</button>
-        <button class="btn" @click="showTip = true">作业规则提示</button>
+        <button class="btn secondary" @click="openBerthImport">导入泊位计划</button>
+        <button class="btn" @click="openRuleTips">作业规则提示</button>
       </div>
     </div>
 
@@ -78,9 +78,10 @@
       </div>
     </BaseModal>
 
-    <ProgressModal v-model="showProgress" />
+    <ProgressModal v-model="showProgress" :message="progressMessage" />
 
     <BaseModal v-model="showTip" title="作业规则提示">
+      <p class="modal-message">{{ tipMessage }}</p>
       <ul>
         <li>泊位安全间隔 ≥ 30m，桥吊横移间隔 ≥ 2 Bay。</li>
         <li>AGV、拖车路径冲突自动避让，场桥与岸桥避免同时跨堆。</li>
@@ -130,6 +131,8 @@ const resourceRows = [
 const showForm = ref(false);
 const showTip = ref(false);
 const showProgress = ref(false);
+const progressMessage = ref('');
+const tipMessage = ref('作业规则与新资源校验结果');
 
 const form = reactive({
   name: '',
@@ -140,7 +143,18 @@ const form = reactive({
 });
 
 const saveResource = () => {
+  tipMessage.value = `资源 ${form.name || '新资源'} 已校验安全间隔与干涉，等待调度生效。`;
   showForm.value = false;
+  showTip.value = true;
+};
+
+const openBerthImport = () => {
+  progressMessage.value = '正在导入泊位计划并核对潮窗、靠泊窗口与桥吊可达性...';
+  showProgress.value = true;
+};
+
+const openRuleTips = () => {
+  tipMessage.value = '最新作业规则与安全约束提示，确保资源录入合规。';
   showTip.value = true;
 };
 </script>

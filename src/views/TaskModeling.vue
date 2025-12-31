@@ -5,7 +5,7 @@
       <div class="tag-row">
         <button class="btn" @click="showImport = true">导入船期/靠泊计划</button>
         <button class="btn secondary" @click="showValidation = true">异常校验结果</button>
-        <button class="btn" @click="showPool = true">任务池调度策略</button>
+        <button class="btn" @click="openPoolStrategy">任务池调度策略</button>
       </div>
     </div>
 
@@ -101,7 +101,7 @@
       </ul>
     </BaseModal>
 
-    <ProgressModal v-model="showPool" />
+    <ProgressModal v-model="showPool" :message="progressMessage" />
   </div>
 </template>
 
@@ -137,6 +137,7 @@ const tasks = [
 const showImport = ref(false);
 const showValidation = ref(false);
 const showPool = ref(false);
+const progressMessage = ref('');
 
 const importForm = reactive({
   source: 'EDI',
@@ -157,6 +158,12 @@ const windowCoverage = 92;
 
 const confirmImport = () => {
   showImport.value = false;
+  progressMessage.value = '船期/靠泊计划导入中，正在拆解舱位与生成任务池...';
+  showPool.value = true;
+};
+
+const openPoolStrategy = () => {
+  progressMessage.value = '正在根据优先级和时间窗生成任务池调度策略与分流方案...';
   showPool.value = true;
 };
 </script>

@@ -95,7 +95,7 @@
       </div>
       <div class="section-header" style="margin-top: 12px;">
         <span>导出时同时固化日志以便审计追溯。</span>
-        <button class="btn" @click="showProgress = true">导出</button>
+        <button class="btn" @click="exportReport">导出</button>
       </div>
     </BaseModal>
 
@@ -126,7 +126,7 @@
       <p>估算本班次碳排 3.2 tCO2e，能耗成本 5.8 万元。</p>
     </BaseModal>
 
-    <ProgressModal v-model="showProgress" />
+    <ProgressModal v-model="showProgress" :message="progressMessage" />
   </div>
 </template>
 
@@ -173,4 +173,11 @@ const showReport = ref(false);
 const showCompare = ref(false);
 const showCarbon = ref(false);
 const showProgress = ref(false);
+const progressMessage = ref('');
+
+const exportReport = () => {
+  progressMessage.value = '正在导出甘特图、泊位占用图及 KPI 报表，完成后自动下载...';
+  showReport.value = false;
+  showProgress.value = true;
+};
 </script>

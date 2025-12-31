@@ -1,5 +1,6 @@
 <template>
   <BaseModal :model-value="modelValue" title="进度跟踪" @update:modelValue="emitClose">
+    <p v-if="message" class="modal-message">{{ message }}</p>
     <div class="form-grid">
       <div v-for="item in progresses" :key="item.label">
         <div class="section-header">
@@ -18,7 +19,11 @@
 import BaseModal from './BaseModal.vue';
 
 const props = defineProps({
-  modelValue: Boolean
+  modelValue: Boolean,
+  message: {
+    type: String,
+    default: ''
+  }
 });
 const emit = defineEmits(['update:modelValue']);
 

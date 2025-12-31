@@ -85,7 +85,7 @@
       </div>
       <div class="section-header" style="margin-top: 12px;">
         <span>确认后同步至设备与班组终端，并生成回执。</span>
-        <button class="btn" @click="showProgress = true">确认下发</button>
+        <button class="btn" @click="confirmDispatch">确认下发</button>
       </div>
     </BaseModal>
 
@@ -114,11 +114,11 @@
       </div>
       <div class="section-header" style="margin-top: 12px;">
         <span>所有回执均会留痕审计，可追溯。</span>
-        <button class="btn" @click="showProgress = true">确认</button>
+        <button class="btn" @click="sendFeedback">确认</button>
       </div>
     </BaseModal>
 
-    <ProgressModal v-model="showProgress" />
+    <ProgressModal v-model="showProgress" :message="progressMessage" />
   </div>
 </template>
 
@@ -162,10 +162,23 @@ const showDispatch = ref(false);
 const showAlert = ref(false);
 const showFeedback = ref(false);
 const showProgress = ref(false);
+const progressMessage = ref('');
 
 const dispatchForm = ref({
   equipment: 'QCT-01',
   task: 'T-1001',
   team: '甲班'
 });
+
+const confirmDispatch = () => {
+  progressMessage.value = `正在下发任务 ${dispatchForm.value.task} 至 ${dispatchForm.value.equipment}，班组 ${dispatchForm.value.team} 同步接收...`;
+  showDispatch.value = false;
+  showProgress.value = true;
+};
+
+const sendFeedback = () => {
+  progressMessage.value = '反馈已记录，推送至调度台并生成审计日志...';
+  showFeedback.value = false;
+  showProgress.value = true;
+};
 </script>

@@ -4,7 +4,7 @@
       <h3>遗传算法调度优化</h3>
       <div class="tag-row">
         <button class="btn" @click="showConfig = true">参数配置</button>
-        <button class="btn secondary" @click="showProgress = true">启动求解</button>
+        <button class="btn secondary" @click="openSolveProgress">启动求解</button>
         <button class="btn" @click="showReplay = true">方案可复现</button>
       </div>
     </div>
@@ -98,7 +98,7 @@
       </div>
     </BaseModal>
 
-    <ProgressModal v-model="showProgress" />
+    <ProgressModal v-model="showProgress" :message="progressMessage" />
 
     <BaseModal v-model="showReplay" title="方案可复现与导出">
       <p>保存当前随机种子、参数、解码器与约束修复策略，以便重放。</p>
@@ -108,7 +108,7 @@
       </div>
       <div class="section-header" style="margin-top: 12px;">
         <span>导出 JSON/CSV 包含任务序列与设备分配。</span>
-        <button class="btn" @click="showProgress = true">导出</button>
+        <button class="btn" @click="exportReplay">导出</button>
       </div>
     </BaseModal>
   </div>
@@ -158,6 +158,7 @@ const plans = [
 const showConfig = ref(false);
 const showProgress = ref(false);
 const showReplay = ref(false);
+const progressMessage = ref('');
 
 const config = reactive({
   population: 120,
@@ -170,7 +171,19 @@ const config = reactive({
 const replayTag = ref('');
 
 const applyConfig = () => {
+  progressMessage.value = `参数已保存，正在预热求解器（种群 ${config.population}、代数 ${config.generations}）...`;
   showConfig.value = false;
+  showProgress.value = true;
+};
+
+const openSolveProgress = () => {
+  progressMessage.value = '启动遗传算法求解，评估适应度、修复约束并生成多方案...';
+  showProgress.value = true;
+};
+
+const exportReplay = () => {
+  progressMessage.value = `方案 ${replayTag.value || '未命名'} 导出中，包含随机种子与解码器配置...`;
+  showReplay.value = false;
   showProgress.value = true;
 };
 </script>

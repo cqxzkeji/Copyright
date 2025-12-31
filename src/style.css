@@ -57,6 +57,12 @@ button {
   background: #f9fbff;
 }
 
+.modal-message {
+  margin: 0 0 12px;
+  color: #1d2a3a;
+  font-weight: 600;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
