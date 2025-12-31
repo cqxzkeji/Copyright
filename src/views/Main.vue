@@ -90,6 +90,9 @@ const logout = () => {
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: 16px;
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
 }
 
 .logo {
@@ -100,6 +103,7 @@ const logout = () => {
 nav {
   display: grid;
   gap: 10px;
+  width: 100%;
 }
 
 .nav-item {
@@ -108,6 +112,7 @@ nav {
   background: #fff;
   border: 1px solid var(--border);
   font-weight: 600;
+  display: block;
 }
 
 .nav-item.active {
@@ -136,7 +141,8 @@ nav {
 
 @media (max-width: 900px) {
   .layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: 260px 1fr;
+    overflow-x: auto;
   }
   .sidebar {
     grid-template-rows: auto auto;
