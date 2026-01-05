@@ -13,17 +13,18 @@
         </div>
       </div>
       <div class="grid" style="grid-template-columns: repeat(auto-fit,minmax(280px,1fr));">
-        <div class="card video-box">
-          <div class="video-header">前视摄像头</div>
-          <div class="video-body">视频流</div>
-        </div>
-        <div class="card video-box">
-          <div class="video-header">点云窗口</div>
-          <div class="video-body">点云 3D</div>
-        </div>
-        <div class="card video-box">
-          <div class="video-header">毫米波雷达</div>
-          <div class="video-body">距离 & 角度</div>
+        <div v-for="feed in feeds" :key="feed.title" class="card video-box">
+          <div class="video-header">{{ feed.title }}</div>
+          <div class="video-body image-body">
+            <img
+              v-if="!feed.error"
+              :src="feed.src"
+              :alt="feed.title"
+              loading="lazy"
+              @error="feed.error = true"
+            />
+            <div v-else class="video-fallback">{{ feed.fallback }}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -119,6 +120,9 @@
 
 <script setup>
 import { computed, reactive, ref } from 'vue';
+import cameraFeed from '../assets/camera-feed.svg';
+import pointcloudView from '../assets/pointcloud-view.svg';
+import radarView from '../assets/radar-view.svg';
 import ModalDialog from '../components/ModalDialog.vue';
 import ProgressModal from '../components/ProgressModal.vue';
 
@@ -131,6 +135,12 @@ const showIndicators = ref(false);
 const showRecordHint = ref(false);
 const monitorProgress = ref(10);
 const latency = ref(32);
+
+const feeds = reactive([
+  { title: '前视摄像头', src: cameraFeed, fallback: '视频流加载失败', error: false },
+  { title: '点云窗口', src: pointcloudView, fallback: '点云占位图', error: false },
+  { title: '毫米波雷达', src: radarView, fallback: '距离 & 角度占位图', error: false }
+]);
 
 const chartData = reactive(Array.from({ length: 10 }).map((_, i) => 10 + (Math.sin(i) + 1) * 30));
 const chartData2 = reactive(chartData.map((v, i) => v - i * 2 + 8));
@@ -179,6 +189,24 @@ const toggleMonitoring = () => {
   place-items: center;
   color: var(--primary);
   font-weight: 700;
+}
+
+.image-body {
+  padding: 8px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+}
+
+.image-body img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px #e0e7ff;
+}
+
+.video-fallback {
+  color: var(--muted);
 }
 
 .muted { color: var(--muted); margin: 4px 0 0; }

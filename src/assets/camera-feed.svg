@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-label="前视摄像头示意图">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#eaf3ff" offset="0"/>
+      <stop stop-color="#cde4ff" offset="1"/>
+    </linearGradient>
+  </defs>
+  <rect width="320" height="180" rx="16" fill="url(#bg)" stroke="#2b7de9" stroke-width="3"/>
+  <circle cx="80" cy="90" r="32" fill="#2b7de9" opacity="0.18"/>
+  <circle cx="160" cy="90" r="46" fill="#17a85f" opacity="0.2"/>
+  <circle cx="220" cy="90" r="30" fill="#2b7de9" opacity="0.22"/>
+  <text x="20" y="34" font-size="18" fill="#0f172a" font-weight="700">前视摄像头</text>
+  <text x="20" y="60" font-size="14" fill="#475569">高清视频流占位图</text>
+  <rect x="40" y="120" width="240" height="10" rx="5" fill="#2b7de9" opacity="0.5"/>
+  <rect x="40" y="140" width="180" height="10" rx="5" fill="#17a85f" opacity="0.6"/>
+</svg>
