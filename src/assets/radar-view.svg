@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-label="毫米波雷达示意图">
+  <defs>
+    <linearGradient id="bg3" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#fff7ed" offset="0"/>
+      <stop stop-color="#ffe0cc" offset="1"/>
+    </linearGradient>
+  </defs>
+  <rect width="320" height="180" rx="16" fill="url(#bg3)" stroke="#f97316" stroke-width="3"/>
+  <g stroke="#f97316" stroke-width="3" opacity="0.5" fill="none">
+    <path d="M60 150 Q160 40 260 150"/>
+    <path d="M60 130 Q160 60 260 130"/>
+    <path d="M60 110 Q160 80 260 110"/>
+  </g>
+  <circle cx="160" cy="150" r="10" fill="#f97316"/>
+  <text x="20" y="34" font-size="18" fill="#0f172a" font-weight="700">毫米波雷达</text>
+  <text x="20" y="60" font-size="14" fill="#475569">距离/角度占位图</text>
+</svg>
