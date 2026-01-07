@@ -36,6 +36,8 @@
       <button class="btn" type="button" @click="openModal('filter')">筛选维度</button>
       <button class="btn secondary" type="button" @click="openModal('report')">生成分析报告</button>
       <button class="btn ghost" type="button" @click="openModal('alert')">策略提醒</button>
+      <button class="btn secondary" type="button" @click="openModal('forecast')">销售预测</button>
+      <button class="btn ghost" type="button" @click="openModal('risk')">风险评估</button>
     </div>
   </div>
 
@@ -64,6 +66,28 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">决策支持建议</div>
+    <div class="card-grid">
+      <div class="card">
+        <h3>高强钢扩产</h3>
+        <p>建议提升 Q690 系列产能 12%，覆盖重点基建项目需求。</p>
+      </div>
+      <div class="card">
+        <h3>区域深耕</h3>
+        <p>华东、华南订单增幅明显，可配置专线供应。</p>
+      </div>
+      <div class="card">
+        <h3>价格策略</h3>
+        <p>耐磨板材市场竞争激烈，建议优化阶梯报价。</p>
+      </div>
+      <div class="card">
+        <h3>交付保障</h3>
+        <p>重点订单交付周期拉长，建议提前锁定产线。</p>
+      </div>
     </div>
   </div>
 
@@ -104,6 +128,19 @@
   <BaseModal v-if="activeModal === 'alert'" title="策略提醒" @close="activeModal = ''">
     <p style="margin-top: 0;">高强度结构钢订单增长放缓，建议增加重点客户回访。</p>
     <button class="btn" type="button" @click="activeModal = ''">收到</button>
+  </BaseModal>
+
+  <BaseModal v-if="activeModal === 'forecast'" title="销售预测" @close="activeModal = ''">
+    <p style="margin-top: 0;">模型预测下月订单总额约为 2,050 万，增长 8%。</p>
+    <div class="progress-bar">
+      <span style="width: 68%;"></span>
+    </div>
+    <p style="margin: 12px 0 0; color: var(--muted);">已生成 68% 数据样本。</p>
+  </BaseModal>
+
+  <BaseModal v-if="activeModal === 'risk'" title="风险评估" @close="activeModal = ''">
+    <p style="margin-top: 0;">当前主要风险来自原料价格波动与交付瓶颈。</p>
+    <button class="btn" type="button" @click="activeModal = ''">确认</button>
   </BaseModal>
 </template>
 
