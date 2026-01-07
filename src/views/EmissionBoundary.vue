@@ -219,8 +219,11 @@ const openModal = (title) => {
 
 .line-point {
   flex: 1;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   gap: 6px;
+  height: 100%;
   font-size: 12px;
   color: #64748b;
 }

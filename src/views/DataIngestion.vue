@@ -187,7 +187,9 @@ const openModal = (title) => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end;
   gap: 6px;
+  height: 100%;
   font-size: 12px;
   color: #64748b;
 }
