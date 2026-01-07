@@ -226,6 +226,7 @@ const openModal = (title) => {
 }
 
 .line-point span {
+  display: block;
   width: 100%;
   background: linear-gradient(180deg, #7dd3fc, #0ea5e9);
   border-radius: 8px 8px 4px 4px;

@@ -248,6 +248,7 @@ const openModal = (title) => {
 }
 
 .bar span {
+  display: block;
   width: 100%;
   background: linear-gradient(180deg, #93c5fd, #2563eb);
   border-radius: 8px 8px 4px 4px;
