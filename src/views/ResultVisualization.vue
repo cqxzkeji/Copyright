@@ -11,6 +11,14 @@
       </div>
     </div>
     <div class="map-panel">
+      <div class="heatmap">
+        <span class="heat-spot large primary" style="top: 18%; left: 12%;"></span>
+        <span class="heat-spot medium accent" style="top: 32%; left: 38%;"></span>
+        <span class="heat-spot small warning" style="top: 22%; left: 68%;"></span>
+        <span class="heat-spot medium warning" style="top: 58%; left: 18%;"></span>
+        <span class="heat-spot large accent" style="top: 62%; left: 52%;"></span>
+        <span class="heat-spot small primary" style="top: 70%; left: 78%;"></span>
+      </div>
       <div class="map-overlay">
         <h4>更新决策热力图</h4>
         <p>颜色越深表示更新优先级越高。</p>
@@ -245,6 +253,46 @@ const openArchive = () => {
     #eef2ff;
   position: relative;
   overflow: hidden;
+}
+
+.heatmap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.heat-spot {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.7;
+  filter: blur(2px);
+}
+
+.heat-spot.large {
+  width: 140px;
+  height: 140px;
+}
+
+.heat-spot.medium {
+  width: 100px;
+  height: 100px;
+}
+
+.heat-spot.small {
+  width: 70px;
+  height: 70px;
+}
+
+.heat-spot.primary {
+  background: radial-gradient(circle, rgba(47, 128, 237, 0.9), rgba(47, 128, 237, 0));
+}
+
+.heat-spot.accent {
+  background: radial-gradient(circle, rgba(61, 213, 152, 0.9), rgba(61, 213, 152, 0));
+}
+
+.heat-spot.warning {
+  background: radial-gradient(circle, rgba(242, 153, 74, 0.9), rgba(242, 153, 74, 0));
 }
 
 .map-overlay {
