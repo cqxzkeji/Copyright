@@ -31,7 +31,13 @@
       <div class="chart-grid">
         <div v-for="item in chartData" :key="item.label" class="chart-card">
           <div class="circle" :style="{ background: item.color }">{{ item.value }}%</div>
-          <p>{{ item.label }}</p>
+          <div class="chart-detail">
+            <p>{{ item.label }}</p>
+            <div class="chart-bar">
+              <span class="chart-fill" :style="{ width: item.value + '%', background: item.color }"></span>
+            </div>
+            <small>年度占比 {{ item.value }}%</small>
+          </div>
         </div>
       </div>
     </div>
@@ -259,9 +265,8 @@ const openArchive = () => {
 
 .chart-card {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .circle {
@@ -272,6 +277,34 @@ const openArchive = () => {
   place-items: center;
   color: #fff;
   font-weight: 700;
+}
+
+.chart-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chart-detail p {
+  margin: 0;
+  font-weight: 600;
+}
+
+.chart-detail small {
+  color: var(--muted);
+}
+
+.chart-bar {
+  width: 160px;
+  height: 8px;
+  background: #eef2ff;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.chart-fill {
+  display: block;
+  height: 100%;
 }
 
 .report-list {
