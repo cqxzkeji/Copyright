@@ -1,0 +1,21 @@
+<svg width="640" height="360" viewBox="0 0 640 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="640" y2="360">
+      <stop offset="0%" stop-color="#dfe7ff"/>
+      <stop offset="100%" stop-color="#f7fbff"/>
+    </linearGradient>
+    <linearGradient id="rail" x1="0" y1="0" x2="640" y2="0">
+      <stop offset="0%" stop-color="#546387"/>
+      <stop offset="100%" stop-color="#8799bf"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg)"/>
+  <rect x="80" y="120" width="480" height="80" rx="16" fill="url(#rail)"/>
+  <rect x="140" y="150" width="160" height="20" rx="10" fill="#cbd5f5"/>
+  <rect x="340" y="150" width="160" height="20" rx="10" fill="#cbd5f5"/>
+  <circle cx="260" cy="160" r="22" fill="#8aa1cc"/>
+  <circle cx="380" cy="160" r="18" fill="#7a8fb8"/>
+  <circle cx="300" cy="200" r="28" fill="#e2a3a3"/>
+  <circle cx="440" cy="140" r="14" fill="#e2a3a3"/>
+  <text x="48" y="60" font-family="Arial" font-size="24" fill="#2d3d64">灰斑示意图</text>
+</svg>
