@@ -1,0 +1,170 @@
+:root {
+  font-family: "Segoe UI", "PingFang SC", "Microsoft Yahei", sans-serif;
+  color: #1b2a44;
+  background-color: #f4f7fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f4f7fb;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  background: #2f7af8;
+  color: #fff;
+  font-weight: 600;
+}
+
+button.secondary {
+  background: #e7eefc;
+  color: #2f7af8;
+}
+
+button.ghost {
+  background: #f0f4ff;
+  color: #1b2a44;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  padding: 24px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(15, 27, 61, 0.08);
+  padding: 20px;
+}
+
+.flex {
+  display: flex;
+  gap: 16px;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e3e8f0;
+  text-align: left;
+}
+
+.tag {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  display: inline-block;
+  background: #edf2ff;
+  color: #2f7af8;
+}
+
+.chart {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  height: 160px;
+}
+
+.chart-bar {
+  width: 26px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(180deg, #6aa6ff, #2f7af8);
+}
+
+.modal-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 30, 60, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 24px;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  width: min(520px, 100%);
+  box-shadow: 0 16px 40px rgba(15, 27, 61, 0.24);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-body {
+  display: grid;
+  gap: 12px;
+}
+
+.form-field {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d7deea;
+  background: #f9fbff;
+}
+
+.progress-track {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: #ecf1fb;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #2f7af8, #5fb3ff);
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
