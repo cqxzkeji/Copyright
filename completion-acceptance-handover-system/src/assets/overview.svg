@@ -1,0 +1,11 @@
+<svg width="800" height="320" viewBox="0 0 800 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="320" rx="24" fill="#F5F9FF"/>
+  <path d="M72 230C132 210 174 170 232 178C290 186 318 228 378 214C438 200 456 132 520 120C584 108 628 140 680 128" stroke="#3B82F6" stroke-width="4" fill="none"/>
+  <path d="M72 250C132 240 174 220 232 226C290 232 318 258 378 248C438 238 456 210 520 206C584 202 628 214 680 206" stroke="#22C55E" stroke-width="3" fill="none"/>
+  <circle cx="232" cy="178" r="8" fill="#3B82F6"/>
+  <circle cx="378" cy="214" r="8" fill="#3B82F6"/>
+  <circle cx="520" cy="120" r="8" fill="#3B82F6"/>
+  <circle cx="680" cy="128" r="8" fill="#3B82F6"/>
+  <rect x="64" y="40" width="240" height="64" rx="16" fill="#E0F2FE"/>
+  <text x="84" y="80" font-size="18" fill="#2563EB" font-family="Arial">验收通过率趋势</text>
+</svg>
