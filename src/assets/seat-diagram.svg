@@ -1,0 +1,10 @@
+<svg width="520" height="240" viewBox="0 0 520 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="520" height="240" rx="24" fill="#E0F2FE"/>
+  <path d="M140 170C140 137.909 165.909 112 198 112H252C286.137 112 314 139.863 314 174V188H174C155.774 188 140 172.226 140 154V170Z" fill="#38BDF8"/>
+  <rect x="188" y="48" width="120" height="80" rx="24" fill="#60A5FA"/>
+  <rect x="340" y="132" width="120" height="56" rx="20" fill="#94A3B8"/>
+  <circle cx="392" cy="188" r="16" fill="#1E293B"/>
+  <circle cx="454" cy="188" r="16" fill="#1E293B"/>
+  <path d="M356 92C356 75.431 369.431 62 386 62H466C482.569 62 496 75.431 496 92V102H356V92Z" fill="#A5B4FC"/>
+  <text x="40" y="40" font-family="Arial" font-size="18" fill="#0F172A">座椅结构示意</text>
+</svg>
