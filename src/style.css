@@ -1,0 +1,24 @@
+:root {
+  font-family: "Inter", "Noto Sans SC", sans-serif;
+  color: #1f2a44;
+  background-color: #f6f8fb;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #f6f8fb;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
