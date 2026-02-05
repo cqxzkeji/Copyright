@@ -1,0 +1,24 @@
+:root {
+  color-scheme: light;
+  font-family: "Segoe UI", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  color: #1f2a37;
+  background: #f5f7fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f5f7fb;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
