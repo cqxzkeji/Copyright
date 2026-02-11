@@ -1,0 +1,92 @@
+:root {
+  font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  color: #1f2937;
+  background: #f5f9ff;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #eef5ff 0%, #f8fbff 100%);
+}
+.card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(45, 96, 170, 0.12);
+}
+.btn {
+  border: 1px solid #cdddf8;
+  background: #fff;
+  color: #1e3a8a;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn.primary {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+
+.modal-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modal-card {
+  width: min(520px, 100%);
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .25);
+  overflow: hidden;
+}
+.modal-card header {
+  background: #e8f0ff;
+  padding: 12px 16px;
+}
+.modal-card h3 { margin: 0; }
+.modal-body { padding: 16px; }
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 16px 16px;
+}
+
+input, select, textarea {
+  width: 100%;
+  border: 1px solid #cfdcf5;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-top: 6px;
+}
+label { display: block; margin-bottom: 12px; color: #334155; font-size: 14px; }
+
+.grid { display: grid; gap: 14px; }
+.grid.two { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.data-table th,.data-table td { padding: 8px 10px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+.data-table thead { background: #f1f6ff; }
+.status-ok { color: #16a34a; }
+.status-warn { color: #d97706; }
+.status-alert { color: #dc2626; }
+.progress-track { width: 100%; height: 14px; border-radius: 99px; background: #dbeafe; overflow: hidden; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, #3b82f6, #06b6d4); }
+
+@media (max-width: 900px) {
+  .sidebar { width: 100% !important; height: auto !important; position: static !important; }
+  .dashboard-body { margin-left: 0 !important; }
+  .nav-list { display: flex; flex-wrap: wrap; }
+}
