@@ -1,0 +1,61 @@
+:root {
+  font-family: 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  color: #17324d;
+  background: #f3f7ff;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #3f8cff, #67b8ff);
+  color: #fff;
+  font-weight: 600;
+}
+
+button.secondary {
+  background: #e6f0ff;
+  color: #2565cc;
+}
+
+input, select, textarea {
+  width: 100%;
+  border: 1px solid #c9ddff;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e0ebff;
+  box-shadow: 0 6px 20px rgba(35, 109, 216, 0.08);
+}
+
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 860px;
+}
+
+th, td {
+  border-bottom: 1px solid #edf3ff;
+  padding: 10px;
+  text-align: left;
+  font-size: 13px;
+}
+
+th { background: #f8fbff; }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
