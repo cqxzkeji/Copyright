@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="220" viewBox="0 0 640 220">
+  <rect width="640" height="220" fill="#eef6ff"/>
+  <rect x="24" y="76" rx="12" ry="12" width="110" height="64" fill="#60a5fa"/>
+  <rect x="160" y="76" rx="12" ry="12" width="110" height="64" fill="#93c5fd"/>
+  <rect x="296" y="76" rx="12" ry="12" width="110" height="64" fill="#bfdbfe"/>
+  <rect x="432" y="76" rx="12" ry="12" width="110" height="64" fill="#93c5fd"/>
+  <rect x="556" y="76" rx="12" ry="12" width="64" height="64" fill="#60a5fa"/>
+  <g stroke="#1d4ed8" stroke-width="4" fill="none">
+    <line x1="134" y1="108" x2="160" y2="108"/>
+    <line x1="270" y1="108" x2="296" y2="108"/>
+    <line x1="406" y1="108" x2="432" y2="108"/>
+    <line x1="542" y1="108" x2="556" y2="108"/>
+  </g>
+</svg>
